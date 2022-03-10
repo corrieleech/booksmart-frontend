@@ -38,7 +38,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style scoped>
 /* TEMPORARY */
 img {
   border: 1px solid #ddd;

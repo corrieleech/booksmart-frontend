@@ -42,19 +42,45 @@ export default {
     </div>
     <div>
       <h2>Discussion Questions</h2>
-      <p>{{ club.details["disc_questions"] }}</p>
+      <span v-html="`${club.details['disc_questions']}`"></span>
     </div>
-    <div>
+    <div v-if="club['is_member?']">
       <h2>Formal Messages</h2>
+      <div v-for="message in club.messages" v-bind:key="message.id">
+        <p v-if="message.category == 'formal'">
+          User ID: {{ message.user_id }} - {{ message.updated_at }}
+          <br />
+          {{ message.body }}
+        </p>
+      </div>
     </div>
-    <div>
+    <div v-if="club['is_member?']">
       <h2>Informal Messages</h2>
+      <div v-for="message in club.messages" v-bind:key="message.id">
+        <p v-if="message.category == 'informal'">
+          User ID: {{ message.user_id }} - {{ message.updated_at }}
+          <br />
+          {{ message.body }}
+        </p>
+      </div>
     </div>
     <div>
       <h2>Members</h2>
-      <div v-for="member in club.memberships" v-bind:key="member.id">{{ member }}</div>
+      <div v-for="membership in club.memberships" v-bind:key="membership.id">
+        <p>
+          <img class="user" :src="`${membership.user['image']}`" />
+          {{ membership.user["name"] }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
-<style></style>
+<style>
+/* TEMPORARY */
+img.user {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+</style>
