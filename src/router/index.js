@@ -4,6 +4,9 @@ import AboutView from "../views/AboutView.vue";
 import SignupView from "../views/SignupView.vue";
 import LoginView from "../views/LoginView.vue";
 import LogoutView from "../views/LogoutView.vue";
+import UsersShow from "../views/UsersShow.vue";
+import ClubsIndex from "../views/ClubsIndex.vue";
+import ClubsShow from "../views/ClubsShow.vue";
 
 const routes = [
   {
@@ -30,6 +33,21 @@ const routes = [
     path: "/logout",
     name: "logout",
     component: LogoutView,
+  },
+  {
+    path: "/users/2",
+    name: "show",
+    component: UsersShow,
+  },
+  {
+    path: "/clubs",
+    name: "clubs",
+    component: ClubsIndex,
+  },
+  {
+    path: "/clubs/:id",
+    name: "clubsshow",
+    component: ClubsShow,
   },
 ];
 

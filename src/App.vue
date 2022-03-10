@@ -9,6 +9,8 @@
     <router-link to="/login">Log In</router-link>
     |
     <router-link to="/logout">Log Out</router-link>
+    |
+    <router-link to="/clubs/new">Create a Club</router-link>
   </nav>
   <router-view />
 </template>
