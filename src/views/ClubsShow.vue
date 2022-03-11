@@ -32,6 +32,9 @@ export default {
   <div class="clubs-show">
     <div>
       <h1>{{ club.name }}</h1>
+      <h2 v-if="club.is_active">(Active)</h2>
+      <h2 v-else>(Inactive)</h2>
+      <font-awesome-icon icon="fa-solid fa-comment-check" />
       <img :src="`${club.book['cover_image']['href']}`" />
       <p>
         Book:

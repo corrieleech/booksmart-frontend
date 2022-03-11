@@ -5,7 +5,9 @@ import SignupView from "../views/SignupView.vue";
 import LoginView from "../views/LoginView.vue";
 import LogoutView from "../views/LogoutView.vue";
 import UsersShow from "../views/UsersShow.vue";
+import UsersEdit from "../views/UsersEdit.vue";
 import ClubsIndex from "../views/ClubsIndex.vue";
+import ClubsNew from "../views/ClubsNew.vue";
 import ClubsShow from "../views/ClubsShow.vue";
 
 const routes = [
@@ -35,14 +37,24 @@ const routes = [
     component: LogoutView,
   },
   {
-    path: "/users/2",
+    path: "/users/:id",
     name: "show",
     component: UsersShow,
+  },
+  {
+    path: "/users/:id/edit",
+    name: "users-edit",
+    component: UsersEdit,
   },
   {
     path: "/clubs",
     name: "clubs",
     component: ClubsIndex,
+  },
+  {
+    path: "/clubs/new",
+    name: "clubs-new",
+    component: ClubsNew,
   },
   {
     path: "/clubs/:id",
