@@ -9,6 +9,7 @@ export default {
   },
   created: function () {
     axios.get("/clubs").then((response) => {
+      console.log(response.data);
       this.clubs = response.data;
     });
   },
@@ -17,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <div class="users-show">
+  <div class="clubs-index">
     <h1>Book Clubs</h1>
   </div>
   <div v-for="club in clubs" v-bind:key="club.id">
