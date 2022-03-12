@@ -6,6 +6,7 @@ export default {
     return {
       search: {},
       possibleBooks: [],
+      hasSearched: false,
       clubName: "",
     };
   },
@@ -16,6 +17,7 @@ export default {
       axios.get("/books", params).then((response) => {
         console.log("Search", response.data);
         this.possibleBooks = response.data;
+        this.hasSearched = true;
       });
     },
     createClub: function (book) {
@@ -43,6 +45,9 @@ export default {
     <button v-on:click="searchTitle()">Search</button>
     <br />
     <br />
+  </div>
+  <div v-if="!possibleBooks.length && hasSearched">
+    <p>No available books match your search. Try again.</p>
   </div>
   <div v-for="book in possibleBooks" v-bind:key="book.isbn">
     <img :src="book._links[1]['href']" alt="book cover" />

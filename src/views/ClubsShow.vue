@@ -5,16 +5,16 @@ export default {
   data: function () {
     return {
       club: {
-        name: "",
-        book: {
-          title: "",
-          author: "",
-          cover_image: {
-            rel: "icon",
-            href: "",
-          },
-        },
-        memberships: [],
+        // name: "",
+        // book: {
+        //   title: "",
+        //   author: "",
+        //   cover_image: {
+        //     rel: "icon",
+        //     href: "",
+        //   },
+        // },
+        // memberships: [],
       },
     };
   },
@@ -24,7 +24,25 @@ export default {
       this.club = response.data;
     });
   },
-  methods: {},
+  methods: {
+    membershipCreate: function () {
+      const params = { club_id: this.club.id };
+      axios.post("/memberships", params).then((response) => {
+        console.log("Membership create:", response.data);
+        this.club.memberships.push(response.data);
+      });
+    },
+    membershipDestroy: function () {
+      const membership = this.club.memberships.find((membership) => membership.user.id == 1);
+      console.log(membership.id);
+      const index = this.club.memberships.indexOf(membership);
+      console.log(index);
+      // axios.delete(`/memberships/${membership.id}`).then((response) => {
+      //   console.log("Membership deleted:", response.data);
+      //   this.club.memberships.slice(index, 0);
+      // });
+    },
+  },
 };
 </script>
 
@@ -34,7 +52,10 @@ export default {
       <h1>{{ club.name }}</h1>
       <h2 v-if="club.is_active">(Active)</h2>
       <h2 v-else>(Inactive)</h2>
-      <font-awesome-icon icon="fa-solid fa-comment-check" />
+      <button v-if="!club['is_member?']" v-on:click="membershipCreate()">Join Club</button>
+      <button v-else v-on:click="membershipDestroy()">Leave Club</button>
+      <br />
+      <br />
       <img :src="`${club.book['cover_image']['href']}`" />
       <p>
         Book:

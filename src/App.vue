@@ -3,7 +3,6 @@ export default {
   data: function () {
     return {
       isLoggedIn: !!localStorage.jwt,
-      id: 1,
     };
   },
   watch: {
