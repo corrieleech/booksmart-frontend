@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+import
 
 export default {
   data: function () {
@@ -33,6 +34,15 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
+    deleteUser: function (user) {
+      if (confirm("Do you really want to delete?")) {
+        axios.delete(`/users/${user.id}`).then((response) => {
+          console.log("Deleted user", response.data);
+        });
+        localStorage.removeItem("jwt");
+        this.$router.push("/signup");
+      }
+    },
   },
 };
 </script>
@@ -41,6 +51,7 @@ export default {
   <div class="users-show">
     <button v-on:click="selectEdit()">Edit Profile</button>
     <h1>Profile</h1>
+    <font-awesome-icon icon="fa-solid fa-comment-check" />
     <img :src="user.image" />
     <h2>{{ user.name }}</h2>
     <div>
@@ -60,7 +71,7 @@ export default {
     </div>
   </div>
   <dialog id="user-edit">
-    <form v-on:submit.prevent="updateUser(updateUserParams)">
+    <form method="dialog">
       <h2>Edit Profile</h2>
       <label for="name">Name:</label>
       <input type="text" id="name" v-model="updateUserParams.name" />
@@ -83,7 +94,13 @@ export default {
       <br />
       <br />
       <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-      <input type="submit" value="Update" />
+      <button value="default" v-on:click="updateUser(updateUserParams)">Update</button>
+      <br />
+      <br />
+      <button v-on:click="deleteUser(updateUserParams)">Delete Profile</button>
+      <br />
+      <br />
+      <button value="cancel">Cancel</button>
     </form>
   </dialog>
 </template>
