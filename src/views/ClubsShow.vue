@@ -1,5 +1,8 @@
 <script>
 import axios from "axios";
+import dayjs from "dayjs";
+var relativeTime = require("dayjs/plugin/relativeTime");
+dayjs.extend(relativeTime);
 
 export default {
   data: function () {
@@ -42,6 +45,9 @@ export default {
       //   this.club.memberships.slice(index, 0);
       // });
     },
+    relativeDate: function (date) {
+      return dayjs().to(dayjs(date));
+    },
   },
 };
 </script>
@@ -72,7 +78,7 @@ export default {
       <h2>Formal Messages</h2>
       <div v-for="message in club.messages" v-bind:key="message.id">
         <p v-if="message.category == 'formal'">
-          User ID: {{ message.user_id }} - {{ message.updated_at }}
+          User ID: {{ message.user_id }} - {{ relativeDate(message.updated_at) }}
           <br />
           {{ message.body }}
         </p>
@@ -82,7 +88,7 @@ export default {
       <h2>Informal Messages</h2>
       <div v-for="message in club.messages" v-bind:key="message.id">
         <p v-if="message.category == 'informal'">
-          User ID: {{ message.user_id }} - {{ message.updated_at }}
+          User ID: {{ message.user_id }} - {{ relativeDate(message.updated_at) }}
           <br />
           {{ message.body }}
         </p>
