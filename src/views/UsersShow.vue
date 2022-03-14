@@ -1,6 +1,5 @@
 <script>
 import axios from "axios";
-import
 
 export default {
   data: function () {
@@ -51,7 +50,6 @@ export default {
   <div class="users-show">
     <button v-on:click="selectEdit()">Edit Profile</button>
     <h1>Profile</h1>
-    <font-awesome-icon icon="fa-solid fa-comment-check" />
     <img :src="user.image" />
     <h2>{{ user.name }}</h2>
     <div>
