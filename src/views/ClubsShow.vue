@@ -41,14 +41,17 @@ export default {
       axios.post("/memberships", params).then((response) => {
         console.log("Membership create:", response.data);
         this.club.memberships.push(response.data);
+        this.club["is_member?"] = true;
       });
     },
     membershipDestroy: function () {
       const membership = this.club.memberships.find((membership) => membership.user.id == this.profile);
-      console.log(membership.id);
+      const index = this.club.memberships.indexOf(membership);
       axios.delete(`/memberships/${membership.id}`).then((response) => {
         console.log("Membership deleted:", response.data);
       });
+      this.club.memberships.slice(index, 1);
+      this.club["is_member?"] = false;
     },
     relativeDate: function (date) {
       return dayjs().to(dayjs(date));
