@@ -3,11 +3,13 @@ export default {
   data: function () {
     return {
       isLoggedIn: !!localStorage.jwt,
+      profile: localStorage.getItem("profile"),
     };
   },
   watch: {
     $route: function () {
       this.isLoggedIn = !!localStorage.jwt;
+      this.profile = localStorage.getItem("profile");
     },
   },
 };
@@ -27,7 +29,7 @@ export default {
     |
     <router-link to="/clubs/new" v-if="isLoggedIn">Create a Club</router-link>
     |
-    <router-link v-bind:to="`/users/${id}`" v-if="isLoggedIn">My Profile</router-link>
+    <router-link v-bind:to="`/users/${profile}`" v-if="isLoggedIn">My Profile</router-link>
   </nav>
   <router-view />
 </template>

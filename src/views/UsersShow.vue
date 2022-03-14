@@ -7,6 +7,7 @@ export default {
       user: {},
       updateUserParams: {},
       errors: [],
+      profile: localStorage.getItem("profile"),
     };
   },
   created: function () {
@@ -39,6 +40,7 @@ export default {
           console.log("Deleted user", response.data);
         });
         localStorage.removeItem("jwt");
+        localStorage.removeItem("profile");
         this.$router.push("/signup");
       }
     },
@@ -48,7 +50,7 @@ export default {
 
 <template>
   <div class="users-show">
-    <button v-on:click="selectEdit()">Edit Profile</button>
+    <button v-if="profile == user.id" v-on:click="selectEdit()">Edit Profile</button>
     <h1>Profile</h1>
     <img :src="user.image" />
     <h2>{{ user.name }}</h2>

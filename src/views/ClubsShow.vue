@@ -8,17 +8,19 @@ export default {
   data: function () {
     return {
       club: {
-        // name: "",
-        // book: {
-        //   title: "",
-        //   author: "",
-        //   cover_image: {
-        //     rel: "icon",
-        //     href: "",
-        //   },
-        // },
-        // memberships: [],
+        name: "",
+        book: {
+          title: "",
+          author: "",
+          cover_image: {
+            rel: "icon",
+            href: "",
+          },
+        },
+        memberships: [],
       },
+      messageBody: "",
+      categoryType: "",
     };
   },
   created: function () {
@@ -47,6 +49,26 @@ export default {
     },
     relativeDate: function (date) {
       return dayjs().to(dayjs(date));
+    },
+    messageCreate: function (number) {
+      if (number == 1) {
+        this.categoryType = "informal";
+      } else {
+        this.categoryType = "formal";
+      }
+      const params = {
+        club_id: this.club.id,
+        category: this.categoryType,
+        body: this.messageBody,
+      };
+      axios.post("/messages", params).then((response) => {
+        console.log(response.data);
+        this.club.messages.push(response.data);
+      });
+      this.messageBody = "";
+    },
+    messageUpdate: function () {
+      console.log("ready to edit message");
     },
   },
 };
@@ -82,28 +104,44 @@ export default {
       <h2>Formal Messages</h2>
       <div v-for="message in club.messages" v-bind:key="message.id">
         <p v-if="message.category == 'formal'">
-          User ID: {{ message.user_id }} - {{ relativeDate(message.updated_at) }}
+          <router-link v-bind:to="`/users/${message.user['id']}`">
+            <b>{{ message.user["name"] }}</b>
+          </router-link>
+          -
+          <i>{{ relativeDate(message.updated_at) }}</i>
           <br />
           {{ message.body }}
         </p>
       </div>
+      <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
+      <br />
+      <button v-on:click="messageCreate(0)">Add Message</button>
     </div>
     <div v-if="club['is_member?']">
       <h2>Informal Messages</h2>
       <div v-for="message in club.messages" v-bind:key="message.id">
         <p v-if="message.category == 'informal'">
-          User ID: {{ message.user_id }} - {{ relativeDate(message.updated_at) }}
+          <router-link v-bind:to="`/users/${message.user['id']}`">
+            <b>{{ message.user["name"] }}</b>
+          </router-link>
+          -
+          <i>{{ relativeDate(message.updated_at) }}</i>
           <br />
           {{ message.body }}
         </p>
       </div>
+      <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
+      <br />
+      <button v-on:click="messageCreate(1)">Add Message</button>
     </div>
     <div>
       <h2>Members</h2>
       <div v-for="membership in club.memberships" v-bind:key="membership.id">
         <p>
-          <img class="user" :src="`${membership.user['image']}`" />
-          {{ membership.user["name"] }}
+          <router-link v-bind:to="`/users/${membership.user['id']}`">
+            <img class="user" :src="`${membership.user['image']}`" />
+          </router-link>
+          <router-link v-bind:to="`/users/${membership.user['id']}`">{{ membership.user["name"] }}</router-link>
         </p>
       </div>
     </div>
