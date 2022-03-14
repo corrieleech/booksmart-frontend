@@ -5,6 +5,7 @@ export default {
   data: function () {
     return {
       clubs: [],
+      searchParams: "",
     };
   },
   created: function () {
@@ -14,6 +15,13 @@ export default {
     });
   },
   methods: {},
+  computed: {
+    searchClubs() {
+      return this.clubs.filter((club) => {
+        return club.book["title"].toLowerCase().includes(this.searchParams.toLowerCase());
+      });
+    },
+  },
 };
 </script>
 
@@ -21,7 +29,16 @@ export default {
   <div class="clubs-index">
     <h1>Book Clubs</h1>
   </div>
-  <div v-for="club in clubs" v-bind:key="club.id">
+  <div>
+    Search:
+    <input type="text" v-model="searchParams" list="clubTitles" />
+    <br />
+    <datalist id="clubTitles">
+      <option v-for="club in clubs" v-bind:key="club.id">{{ club.book["title"] }}</option>
+    </datalist>
+    <br />
+  </div>
+  <div v-for="club in searchClubs" v-bind:key="club.id">
     <router-link v-bind:to="`/clubs/${club.id}`">
       <img :src="`${club.book['cover_image']['href']}`" />
     </router-link>
