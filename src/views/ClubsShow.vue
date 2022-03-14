@@ -7,6 +7,7 @@ dayjs.extend(relativeTime);
 export default {
   data: function () {
     return {
+      profile: localStorage.getItem("profile"),
       club: {
         name: "",
         book: {
@@ -21,6 +22,7 @@ export default {
       },
       messageBody: "",
       categoryType: "",
+      messageEdit: "",
     };
   },
   created: function () {
@@ -38,14 +40,11 @@ export default {
       });
     },
     membershipDestroy: function () {
-      const membership = this.club.memberships.find((membership) => membership.user.id == 1);
+      const membership = this.club.memberships.find((membership) => membership.user.id == this.profile);
       console.log(membership.id);
-      const index = this.club.memberships.indexOf(membership);
-      console.log(index);
-      // axios.delete(`/memberships/${membership.id}`).then((response) => {
-      //   console.log("Membership deleted:", response.data);
-      //   this.club.memberships.slice(index, 0);
-      // });
+      axios.delete(`/memberships/${membership.id}`).then((response) => {
+        console.log("Membership deleted:", response.data);
+      });
     },
     relativeDate: function (date) {
       return dayjs().to(dayjs(date));
@@ -67,8 +66,18 @@ export default {
       });
       this.messageBody = "";
     },
-    messageUpdate: function () {
-      console.log("ready to edit message");
+    messageUpdate: function (message) {
+      axios.patch(`/messages/${message.id}`, message).then((response) => {
+        console.log("Updated message", response.data);
+        this.messageEdit = "";
+      });
+    },
+    messageDelete: function (message) {
+      // const index = this.club.messages.indexOf(message);
+      axios.delete(`/messages/${message.id}`, message).then((response) => {
+        console.log("Message has been removed.", response.data);
+        this.messageEdit = "";
+      });
     },
   },
 };
@@ -103,36 +112,62 @@ export default {
     <div v-if="club['is_member?']">
       <h2>Formal Messages</h2>
       <div v-for="message in club.messages" v-bind:key="message.id">
-        <p v-if="message.category == 'formal'">
-          <router-link v-bind:to="`/users/${message.user['id']}`">
-            <b>{{ message.user["name"] }}</b>
-          </router-link>
-          -
-          <i>{{ relativeDate(message.updated_at) }}</i>
-          <br />
-          {{ message.body }}
-        </p>
+        <div v-if="message.category == 'formal'">
+          <p>
+            <router-link v-bind:to="`/users/${message.user['id']}`">
+              <b>{{ message.user["name"] }}</b>
+            </router-link>
+            -
+            <i>{{ relativeDate(message.updated_at) }}</i>
+            &nbsp;
+            <button v-if="profile == message.user['id']" v-on:click="messageEdit = message.id">Edit</button>
+          </p>
+          <div v-if="messageEdit == message.id">
+            <textarea v-model="message.body"></textarea>
+            <br />
+            <button v-on:click="messageUpdate(message)">Save</button>
+            <button v-on:click="messageEdit = ''">Cancel</button>
+            <button v-on:click="messageDelete(message)">Delete</button>
+          </div>
+          <div v-else>{{ message.body }}</div>
+        </div>
       </div>
-      <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
-      <br />
-      <button v-on:click="messageCreate(0)">Add Message</button>
+      <div>
+        <br />
+        <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
+        <br />
+        <button v-on:click="messageCreate(0)">Add Message</button>
+      </div>
     </div>
     <div v-if="club['is_member?']">
       <h2>Informal Messages</h2>
       <div v-for="message in club.messages" v-bind:key="message.id">
-        <p v-if="message.category == 'informal'">
-          <router-link v-bind:to="`/users/${message.user['id']}`">
-            <b>{{ message.user["name"] }}</b>
-          </router-link>
-          -
-          <i>{{ relativeDate(message.updated_at) }}</i>
-          <br />
-          {{ message.body }}
-        </p>
+        <div v-if="message.category == 'informal'">
+          <p>
+            <router-link v-bind:to="`/users/${message.user['id']}`">
+              <b>{{ message.user["name"] }}</b>
+            </router-link>
+            -
+            <i>{{ relativeDate(message.updated_at) }}</i>
+            &nbsp;
+            <button v-if="profile == message.user['id']" v-on:click="messageEdit = message.id">Edit</button>
+          </p>
+          <div v-if="messageEdit == message.id">
+            <textarea v-model="message.body"></textarea>
+            <br />
+            <button v-on:click="messageUpdate(message)">Save</button>
+            <button v-on:click="messageEdit = ''">Cancel</button>
+            <button v-on:click="messageDelete(message)">Delete</button>
+          </div>
+          <div v-else>{{ message.body }}</div>
+        </div>
       </div>
-      <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
-      <br />
-      <button v-on:click="messageCreate(1)">Add Message</button>
+      <div>
+        <br />
+        <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
+        <br />
+        <button v-on:click="messageCreate(0)">Add Message</button>
+      </div>
     </div>
     <div>
       <h2>Members</h2>
