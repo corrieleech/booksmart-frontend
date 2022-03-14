@@ -18,7 +18,11 @@ export default {
             href: "",
           },
         },
+        details: {
+          disc_questions: "",
+        },
         memberships: [],
+        messages: [],
       },
       messageBody: "",
       categoryType: "",
@@ -166,7 +170,7 @@ export default {
         <br />
         <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
         <br />
-        <button v-on:click="messageCreate(0)">Add Message</button>
+        <button v-on:click="messageCreate(1)">Add Message</button>
       </div>
     </div>
     <div>

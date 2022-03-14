@@ -35,7 +35,11 @@ export default {
         });
     },
     deleteUser: function (user) {
-      if (confirm("Do you really want to delete?")) {
+      if (
+        confirm(
+          "Are you sure you want to delete your account? Doing so will also delete  all your messages from your book clubs."
+        )
+      ) {
         axios.delete(`/users/${user.id}`).then((response) => {
           console.log("Deleted user", response.data);
         });
