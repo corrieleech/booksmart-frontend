@@ -9,20 +9,20 @@ export default {
     return {
       profile: localStorage.getItem("profile"),
       club: {
-        name: "",
-        book: {
-          title: "",
-          author: "",
-          cover_image: {
-            rel: "icon",
-            href: "",
-          },
-        },
-        details: {
-          disc_questions: "",
-        },
-        memberships: [],
-        messages: [],
+        // name: "",
+        // book: {
+        //   title: "",
+        //   author: "",
+        //   cover_image: {
+        //     rel: "icon",
+        //     href: "",
+        //   },
+        // },
+        // details: {
+        //   disc_questions: "",
+        // },
+        // memberships: [],
+        // messages: [],
       },
       messageBody: "",
       categoryType: "",
@@ -92,8 +92,8 @@ export default {
 </script>
 
 <template>
-  <div class="clubs-show">
-    <div>
+  <div>
+    <div v-if="club.memberships">
       <h1>
         {{ club.name }}
         <font-awesome-icon v-if="club['is_member?']" icon="circle-check" size="sm" />
@@ -115,7 +115,7 @@ export default {
     </div>
     <div>
       <h2>Discussion Questions</h2>
-      <span v-html="`${club.details['disc_questions']}`"></span>
+      <span v-if="club.details" v-html="`${club.details['disc_questions']}`"></span>
     </div>
     <div v-if="club['is_member?']">
       <h2>Formal Messages</h2>
