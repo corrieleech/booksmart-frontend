@@ -31,7 +31,7 @@ export default {
   },
   created: function () {
     axios.get(`/clubs/${this.$route.params.id}`).then((response) => {
-      console.log(response.data);
+      console.log("Created", response.data);
       this.club = response.data;
     });
   },
@@ -50,7 +50,7 @@ export default {
       axios.delete(`/memberships/${membership.id}`).then((response) => {
         console.log("Membership deleted:", response.data);
       });
-      this.club.memberships.slice(index, 1);
+      this.club.memberships.splice(index, 1);
       this.club["is_member?"] = false;
     },
     relativeDate: function (date) {
@@ -80,11 +80,12 @@ export default {
       });
     },
     messageDelete: function (message) {
-      // const index = this.club.messages.indexOf(message);
+      const index = this.club.messages.indexOf(message);
       axios.delete(`/messages/${message.id}`, message).then((response) => {
         console.log("Message has been removed.", response.data);
         this.messageEdit = "";
       });
+      this.club.messages.splice(index, 1);
     },
   },
 };
