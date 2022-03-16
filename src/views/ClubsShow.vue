@@ -8,22 +8,7 @@ export default {
   data: function () {
     return {
       profile: localStorage.getItem("profile"),
-      club: {
-        // name: "",
-        // book: {
-        //   title: "",
-        //   author: "",
-        //   cover_image: {
-        //     rel: "icon",
-        //     href: "",
-        //   },
-        // },
-        // details: {
-        //   disc_questions: "",
-        // },
-        // memberships: [],
-        // messages: [],
-      },
+      club: {},
       messageBody: "",
       categoryType: "",
       messageEdit: "",
@@ -102,6 +87,13 @@ export default {
       });
       this.club.messages.splice(index, 1);
     },
+    clubUpdate: function () {
+      this.club.is_active = !this.club.is_active;
+      const params = { is_active: this.club.is_active };
+      axios.patch(`/clubs/${this.club.id}`, params).then((response) => {
+        console.log("Club Updated", response.data);
+      });
+    },
   },
 };
 </script>
@@ -112,10 +104,16 @@ export default {
       <h1>
         {{ club.name }}
         <font-awesome-icon v-if="club['is_member?']" icon="circle-check" size="sm" />
-        <font-awesome-icon v-else icon="user-plus" size="sm" />
+        <font-awesome-icon v-else icon="circle-plus" size="sm" />
       </h1>
-      <h2 v-if="club.is_active">(Active)</h2>
-      <h2 v-else>(Inactive)</h2>
+      <h2 v-if="club.is_active">
+        (Active)
+        <button v-on:click="clubUpdate">Archive Club</button>
+      </h2>
+      <h2 v-else>
+        (Inactive)
+        <button v-on:click="clubUpdate">Reactivate Club</button>
+      </h2>
       <button v-if="!club['is_member?']" v-on:click="membershipCreate()">Join Club</button>
       <button v-else v-on:click="membershipDestroy()">Leave Club</button>
       <br />
@@ -155,7 +153,7 @@ export default {
           <div v-else>{{ message.body }}</div>
         </div>
       </div>
-      <div>
+      <div v-if="club.is_active">
         <br />
         <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
         <br />
@@ -175,7 +173,9 @@ export default {
             -
             <i>{{ relativeDate(message.updated_at) }}</i>
             &nbsp;
-            <button v-if="profile == message.user['id']" v-on:click="messageEdit = message.id">Edit</button>
+            <button v-if="profile == message.user['id'] && club.is_active" v-on:click="messageEdit = message.id">
+              Edit
+            </button>
           </p>
           <div v-if="messageEdit == message.id">
             <textarea v-model="message.body"></textarea>
@@ -187,7 +187,7 @@ export default {
           <div v-else>{{ message.body }}</div>
         </div>
       </div>
-      <div>
+      <div v-if="club.is_active">
         <br />
         <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
         <br />
