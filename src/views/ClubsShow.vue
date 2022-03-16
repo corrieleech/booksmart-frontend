@@ -4,7 +4,13 @@ import dayjs from "dayjs";
 var relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
 
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+
 export default {
+  components: {
+    QuillEditor,
+  },
   data: function () {
     return {
       profile: localStorage.getItem("profile"),
@@ -13,6 +19,12 @@ export default {
       categoryType: "",
       messageEdit: "",
       errors: [],
+      options: {
+        debug: "info",
+        placeholder: "Add a comment...",
+        readOnly: true,
+        theme: "snow",
+      },
     };
   },
   created: function () {
@@ -150,11 +162,12 @@ export default {
             <button v-on:click="messageEdit = ''">Cancel</button>
             <button v-on:click="messageDelete(message)">Delete</button>
           </div>
-          <div v-else>{{ message.body }}</div>
+          <div v-else><span v-html="message.body"></span></div>
         </div>
       </div>
       <div v-if="club.is_active">
         <br />
+        <QuillEditor theme="snow" v-model:content="messageBody" contentType="html" />
         <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
