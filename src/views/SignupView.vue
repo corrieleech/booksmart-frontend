@@ -46,8 +46,18 @@ export default {
       <div>
         <label>Password confirmation:</label>
         <input type="password" v-model="newUserParams.password_confirmation" />
+        <br />
+        <small
+          v-if="newUserParams.password_confirmation && newUserParams.password_confirmation != newUserParams.password"
+        >
+          Passwords must match
+        </small>
       </div>
       <input type="submit" value="Submit" />
     </form>
+    <p>
+      Already have an account?
+      <router-link to="/login">Log in</router-link>
+    </p>
   </div>
 </template>

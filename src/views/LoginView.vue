@@ -16,7 +16,7 @@ export default {
           axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
           localStorage.setItem("jwt", response.data.jwt);
           localStorage.setItem("profile", response.data.user_id);
-          this.$router.push("/");
+          this.$router.push("/clubs");
         })
         .catch((error) => {
           console.log(error.response);
@@ -32,7 +32,7 @@ export default {
 <template>
   <div class="login">
     <form v-on:submit.prevent="submit()">
-      <h1>Login</h1>
+      <h1>Welcome Back</h1>
       <ul>
         <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
       </ul>
@@ -46,5 +46,9 @@ export default {
       </div>
       <input type="submit" value="Submit" />
     </form>
+    <p>
+      Don't have have an account?
+      <router-link to="/signup">Sign up</router-link>
+    </p>
   </div>
 </template>

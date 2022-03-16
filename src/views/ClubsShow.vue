@@ -27,6 +27,7 @@ export default {
       messageBody: "",
       categoryType: "",
       messageEdit: "",
+      errors: [],
     };
   },
   created: function () {
@@ -67,17 +68,31 @@ export default {
         category: this.categoryType,
         body: this.messageBody,
       };
-      axios.post("/messages", params).then((response) => {
-        console.log(response.data);
-        this.club.messages.push(response.data);
-      });
+      axios
+        .post("/messages", params)
+        .then((response) => {
+          console.log(response.data);
+          this.club.messages.push(response.data);
+          this.errors = [];
+        })
+        .catch((error) => {
+          console.log(error.response.data.errors);
+          this.errors = error.response.data.errors;
+        });
       this.messageBody = "";
     },
     messageUpdate: function (message) {
-      axios.patch(`/messages/${message.id}`, message).then((response) => {
-        console.log("Updated message", response.data);
-        this.messageEdit = "";
-      });
+      axios
+        .patch(`/messages/${message.id}`, message)
+        .then((response) => {
+          console.log("Updated message", response.data);
+          this.messageEdit = "";
+          this.errors = [];
+        })
+        .catch((error) => {
+          console.log(error.response.data.errors);
+          this.errors = error.response.data.errors;
+        });
     },
     messageDelete: function (message) {
       const index = this.club.messages.indexOf(message);
@@ -145,6 +160,8 @@ export default {
         <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
+        <br />
+        <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
       </div>
     </div>
     <div v-if="club['is_member?']">
@@ -175,6 +192,8 @@ export default {
         <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
         <br />
         <button v-on:click="messageCreate(1)">Add Message</button>
+        <br />
+        <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
       </div>
     </div>
     <div>
