@@ -22,7 +22,19 @@ export default {
       options: {
         debug: "info",
         placeholder: "Add a comment...",
-        readOnly: true,
+        modules: {
+          toolbar: [
+            [{ font: [] }],
+            [{ size: ["small", false, "large"] }],
+            ["bold", "italic", "underline"],
+            ["blockquote"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ indent: "-1" }, { indent: "+1" }],
+            [{ align: [] }],
+            ["link"],
+            ["clean"],
+          ],
+        },
         theme: "snow",
       },
     };
@@ -167,8 +179,7 @@ export default {
       </div>
       <div v-if="club.is_active">
         <br />
-        <QuillEditor theme="snow" v-model:content="messageBody" contentType="html" />
-        <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
+        <QuillEditor v-model:content="messageBody" contentType="html" :options="options" />
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
         <br />
@@ -191,18 +202,18 @@ export default {
             </button>
           </p>
           <div v-if="messageEdit == message.id">
-            <textarea v-model="message.body"></textarea>
+            <QuillEditor theme="snow" v-model:content="this.messageBody" contentType="html" :options="options" />
             <br />
             <button v-on:click="messageUpdate(message)">Save</button>
             <button v-on:click="messageEdit = ''">Cancel</button>
             <button v-on:click="messageDelete(message)">Delete</button>
           </div>
-          <div v-else>{{ message.body }}</div>
+          <div v-else><span v-html="message.body"></span></div>
         </div>
       </div>
       <div v-if="club.is_active">
         <br />
-        <textarea v-model="messageBody" placeholder="Add a comment..."></textarea>
+        <QuillEditor theme="snow" v-model:content="messageBody" contentType="html" :options="options" />
         <br />
         <button v-on:click="messageCreate(1)">Add Message</button>
         <br />
