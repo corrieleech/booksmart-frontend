@@ -18,6 +18,7 @@ export default {
       messageBody: "",
       categoryType: "",
       messageEdit: "",
+      editContent: "",
       errors: [],
       options: {
         debug: "info",
@@ -83,18 +84,21 @@ export default {
           console.log(response.data);
           this.club.messages.push(response.data);
           this.errors = [];
+          this.messageBody = "";
         })
         .catch((error) => {
           console.log(error.response.data.errors);
           this.errors = error.response.data.errors;
         });
-      this.messageBody = "";
     },
     messageUpdate: function (message) {
+      const index = this.club.messages.indexOf(message);
+      const params = { body: this.editContent };
       axios
-        .patch(`/messages/${message.id}`, message)
+        .patch(`/messages/${message.id}`, params)
         .then((response) => {
           console.log("Updated message", response.data);
+          this.club.messages[index].body = this.editContent;
           this.messageEdit = "";
           this.errors = [];
         })
@@ -165,10 +169,16 @@ export default {
             -
             <i>{{ relativeDate(message.updated_at) }}</i>
             &nbsp;
-            <button v-if="profile == message.user['id']" v-on:click="messageEdit = message.id">Edit</button>
+            <button
+              v-if="profile == message.user['id'] && club.is_active"
+              v-on:click="(messageEdit = message), (editContent = message.body)"
+            >
+              Edit
+            </button>
           </p>
-          <div v-if="messageEdit == message.id">
-            <textarea v-model="message.body"></textarea>
+          <div v-if="messageEdit == message">
+            <QuillEditor theme="snow" v-model:content="editContent" contentType="html" :options="options" />
+            {{ editContent }}
             <br />
             <button v-on:click="messageUpdate(message)">Save</button>
             <button v-on:click="messageEdit = ''">Cancel</button>
@@ -179,7 +189,7 @@ export default {
       </div>
       <div v-if="club.is_active">
         <br />
-        <QuillEditor v-model:content="messageBody" contentType="html" :options="options" />
+        <QuillEditor theme="snow" v-model:content="messageBody" contentType="html" :options="options" />
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
         <br />
@@ -197,12 +207,16 @@ export default {
             -
             <i>{{ relativeDate(message.updated_at) }}</i>
             &nbsp;
-            <button v-if="profile == message.user['id'] && club.is_active" v-on:click="messageEdit = message.id">
+            <button
+              v-if="profile == message.user['id'] && club.is_active"
+              v-on:click="(messageEdit = message), (editContent = message.body)"
+            >
               Edit
             </button>
           </p>
-          <div v-if="messageEdit == message.id">
-            <QuillEditor theme="snow" v-model:content="this.messageBody" contentType="html" :options="options" />
+          <div v-if="messageEdit == message">
+            <QuillEditor theme="snow" v-model:content="editContent" contentType="html" :options="options" />
+            {{ editContent }}
             <br />
             <button v-on:click="messageUpdate(message)">Save</button>
             <button v-on:click="messageEdit = ''">Cancel</button>
