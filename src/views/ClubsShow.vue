@@ -11,8 +11,9 @@ export default {
     return {
       profile: localStorage.getItem("profile"),
       club: {},
-      quillFormal: {},
-      quillInformal: {},
+      formalCreateQuill: {},
+      informalCreateQuill: {},
+      contents: "",
       messageBody: "",
       categoryType: "",
       messageEdit: "",
@@ -45,9 +46,8 @@ export default {
     });
   },
   mounted: function () {
-    this.quillFormal = new Quill("#editorFormal", this.options);
-    this.quillInformal = new Quill("#editorInformal", this.options);
-    console.log("Quills at mounted", this.quillFormal);
+    this.formalCreateQuill = new Quill("#editor", this.options);
+    this.informalCreateQuill = new Quill("#editor2", this.options);
   },
   methods: {
     membershipCreate: function () {
@@ -71,17 +71,19 @@ export default {
       return dayjs().to(dayjs(date));
     },
     messageCreate: function (number) {
-      var contents = this.quill.root.innerHTML;
-      console.log(contents);
+      var quill = this.formalCreateQuill;
       if (number == 1) {
         this.categoryType = "informal";
+        this.contents = this.informalCreateQuill.root.innerHTML;
+        quill = this.informalCreateQuill;
       } else {
         this.categoryType = "formal";
+        this.contents = this.formalCreateQuill.root.innerHTML;
       }
       const params = {
         club_id: this.club.id,
         category: this.categoryType,
-        body: contents,
+        body: this.contents,
       };
       axios
         .post("/messages", params)
@@ -89,7 +91,7 @@ export default {
           console.log(response.data);
           this.club.messages.push(response.data);
           this.errors = [];
-          this.quill.setContents([{ insert: "\n" }]);
+          quill.setContents([{ insert: "\n" }]);
         })
         .catch((error) => {
           console.log(error.response.data.errors);
@@ -193,7 +195,7 @@ export default {
       <div v-if="club.is_active">
         <br />
         <h3>Create A Message</h3>
-        <div id="editorFormal"></div>
+        <div id="editor"></div>
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
         <br />
@@ -228,7 +230,8 @@ export default {
         </div>
       </div>
       <div v-if="club.is_active">
-        <div id="editorInformal"></div>
+        <br />
+        <div id="editor2"></div>
         <br />
         <button v-on:click="messageCreate(1)">Add Message</button>
         <br />
