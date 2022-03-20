@@ -1,20 +1,18 @@
 <script>
+/* global Quill */
+
 import axios from "axios";
 import dayjs from "dayjs";
 var relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
 
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-
 export default {
-  components: {
-    QuillEditor,
-  },
   data: function () {
     return {
       profile: localStorage.getItem("profile"),
       club: {},
+      quillFormal: {},
+      quillInformal: {},
       messageBody: "",
       categoryType: "",
       messageEdit: "",
@@ -46,6 +44,11 @@ export default {
       this.club = response.data;
     });
   },
+  mounted: function () {
+    this.quillFormal = new Quill("#editorFormal", this.options);
+    this.quillInformal = new Quill("#editorInformal", this.options);
+    console.log("Quills at mounted", this.quillFormal);
+  },
   methods: {
     membershipCreate: function () {
       const params = { club_id: this.club.id };
@@ -68,6 +71,8 @@ export default {
       return dayjs().to(dayjs(date));
     },
     messageCreate: function (number) {
+      var contents = this.quill.root.innerHTML;
+      console.log(contents);
       if (number == 1) {
         this.categoryType = "informal";
       } else {
@@ -76,7 +81,7 @@ export default {
       const params = {
         club_id: this.club.id,
         category: this.categoryType,
-        body: this.messageBody,
+        body: contents,
       };
       axios
         .post("/messages", params)
@@ -84,7 +89,7 @@ export default {
           console.log(response.data);
           this.club.messages.push(response.data);
           this.errors = [];
-          this.messageBody = "";
+          this.quill.setContents([{ insert: "\n" }]);
         })
         .catch((error) => {
           console.log(error.response.data.errors);
@@ -128,7 +133,7 @@ export default {
 
 <template>
   <div>
-    <div v-if="club.memberships">
+    <div>
       <h1>
         {{ club.name }}
         <font-awesome-icon v-if="club['is_member?']" icon="circle-check" size="sm" />
@@ -177,8 +182,6 @@ export default {
             </button>
           </p>
           <div v-if="messageEdit == message">
-            <QuillEditor theme="snow" v-model:content="editContent" contentType="html" :options="options" />
-            {{ editContent }}
             <br />
             <button v-on:click="messageUpdate(message)">Save</button>
             <button v-on:click="messageEdit = ''">Cancel</button>
@@ -189,7 +192,8 @@ export default {
       </div>
       <div v-if="club.is_active">
         <br />
-        <QuillEditor theme="snow" v-model:content="messageBody" contentType="html" :options="options" />
+        <h3>Create A Message</h3>
+        <div id="editorFormal"></div>
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
         <br />
@@ -215,8 +219,6 @@ export default {
             </button>
           </p>
           <div v-if="messageEdit == message">
-            <QuillEditor theme="snow" v-model:content="editContent" contentType="html" :options="options" />
-            {{ editContent }}
             <br />
             <button v-on:click="messageUpdate(message)">Save</button>
             <button v-on:click="messageEdit = ''">Cancel</button>
@@ -226,8 +228,7 @@ export default {
         </div>
       </div>
       <div v-if="club.is_active">
-        <br />
-        <QuillEditor theme="snow" v-model:content="messageBody" contentType="html" :options="options" />
+        <div id="editorInformal"></div>
         <br />
         <button v-on:click="messageCreate(1)">Add Message</button>
         <br />
