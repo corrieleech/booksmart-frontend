@@ -1,0 +1,38 @@
+// 
+// footer.scss
+//
+.footer {
+	background-color: $gray-100;
+    margin-top: 80px;
+    .footer-logo {
+        .logo-light {
+            display: $display-dark;
+        }
+        .logo-dark {
+            display: $display-light;
+        }
+    }
+}
+.footer-alter {
+    border-top: 1px solid rgba($dark, 0.09);  
+    .social-circle {  
+        li {
+            a {
+                color: $gray-600;
+                transition: all 0.5s ease-in-out;
+                border: 1px solid rgba($dark, 0.13);
+                border-radius: 50%;
+                line-height: 34px;
+                height: 36px;
+                width: 36px;
+                font-size: 16px;
+                &:hover,
+                &.active {
+                    color: $primary !important;
+                    border: 1px solid $primary;
+                }
+            }
+        }
+    }     
+}
+

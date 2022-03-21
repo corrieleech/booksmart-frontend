@@ -1,0 +1,55 @@
+// client slider
+
+.tns-outer {
+    position: relative;
+    .tns-nav {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        z-index: 1;
+        button {
+            width: 15px !important;
+            height: 7px !important;
+            border: none;
+            background-color: rgba($primary, 0.3) !important;
+            padding: 0px;
+            margin: 0px 4px ;
+            transition: all 0.3s;
+            border-radius: 2px;
+            &:focus, &:hover, &:active, &.active {
+                outline: none;
+                background-color: $primary !important;
+            }
+            &.tns-nav-active {
+                background-color: $primary !important;
+                width: 25px !important;
+            }
+        } 
+    }    
+}
+
+// responsive
+@media (max-width: 991.98px) {
+    .tns-outer {
+        .tns-nav {
+            position: absolute;
+            top: 80%;
+            bottom: 0;
+            left: 50%;
+            margin: 20px 0 0 18px;
+        }
+    }
+}
+
+@media (max-width: 575.98px) { 
+    .tns-outer {
+        .tns-nav {
+            position: absolute;
+            top: 100%;
+            bottom: 0;
+            left: 0%;
+            margin: 20px 0 0 0;
+        }
+    }
+ }

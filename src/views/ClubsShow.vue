@@ -13,6 +13,7 @@ export default {
       club: {},
       formalCreateQuill: {},
       informalCreateQuill: {},
+      editor: {},
       contents: "",
       messageBody: "",
       categoryType: "",
@@ -24,8 +25,6 @@ export default {
         placeholder: "Add a comment...",
         modules: {
           toolbar: [
-            [{ font: [] }],
-            [{ size: ["small", false, "large"] }],
             ["bold", "italic", "underline"],
             ["blockquote"],
             [{ list: "ordered" }, { list: "bullet" }],
@@ -46,8 +45,8 @@ export default {
     });
   },
   mounted: function () {
-    this.formalCreateQuill = new Quill("#editor", this.options);
-    this.informalCreateQuill = new Quill("#editor2", this.options);
+    this.formalCreateQuill = new Quill("#formal", this.options);
+    this.informalCreateQuill = new Quill("#informal", this.options);
   },
   methods: {
     membershipCreate: function () {
@@ -134,7 +133,225 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="clubs-show">
+    <!-- start title -->
+    <section class="section bg-light">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+          <div class="col-lg-8 mt-5 pt-3">
+            <h2 class="fw-bold">
+              {{ club.name }}
+              <font-awesome-icon v-if="club['is_member?']" icon="circle-check" size="sm" />
+              <font-awesome-icon v-else icon="circle-plus" size="sm" />
+            </h2>
+            <h4 class="fw-bold" v-if="!club.is_active">(Inactive)</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end title -->
+
+    <section class="sm-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-md-5 mt-4">
+                <div class="position-relative">
+                  <img class="img-fluid rounded-3" img :src="`${club.book['cover_image']['href']}`" alt="cook-cover" />
+                </div>
+                <button class="btn btn-primary me-2 my-2" v-if="!club['is_member?']" v-on:click="membershipCreate()">
+                  Join Club
+                </button>
+                <button v-else v-on:click="membershipDestroy()" class="btn btn-secondary my-2">Leave Club</button>
+                <button
+                  v-if="club.is_active && club['is_member?']"
+                  class="btn btn-secondary mr-2 my-2"
+                  v-on:click="clubUpdate"
+                >
+                  Archive Club
+                </button>
+                <button
+                  v-if="!club.is_active && club['is_member?']"
+                  class="btn btn-primary mr-2 my-2"
+                  v-on:click="clubUpdate"
+                >
+                  Reactivate Club
+                </button>
+              </div>
+              <!-- CONTENT -->
+              <div class="col-md-7 mt-4">
+                <div class="pro-detail-content">
+                  <div class="price my-3">
+                    <ins class="pe-2 fs-18 text-success fw-semibold text-decoration-none">$209.00</ins>
+                    <del class="text-muted fs-18">$230.00</del>
+                  </div>
+
+                  <p class="text-muted fs-16 my-3">
+                    The full monty brilliant young delinquent burke naff baking cakes the wireless argy-bargy smashing,
+                    squiffy chimney pot I he nicked it twit brolly spend a penny he legged it.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end pro-detail -->
+
+    <!-- detail tab -->
+    <section class="section bg-light" v-if="club['is_member?']">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <nav class="pro-detail-area">
+              <div class="nav nav-tabs border-bottom detail-title" id="nav-tab" role="tablist">
+                <a
+                  class="nav-link border-0 active"
+                  id="nav-home-tab"
+                  data-bs-toggle="tab"
+                  href="#nav-home"
+                  role="tab"
+                  aria-controls="nav-home"
+                  aria-selected="true"
+                >
+                  Formal Discussion
+                </a>
+                <a
+                  class="nav-link border-0"
+                  id="nav-profile-tab"
+                  data-bs-toggle="tab"
+                  href="#nav-profile"
+                  role="tab"
+                  aria-controls="nav-profile"
+                  aria-selected="false"
+                >
+                  Informal Discussion
+                </a>
+                <a
+                  class="nav-link border-0"
+                  id="nav-member-tab"
+                  data-bs-toggle="tab"
+                  href="#nav-members"
+                  role="tab"
+                  aria-controls="nav-members"
+                  aria-selected="false"
+                >
+                  Members
+                </a>
+              </div>
+            </nav>
+            <div class="tab-content py-4" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div v-for="message in club.messages" v-bind:key="message.id">
+                  <div v-show="message.category == 'formal'">
+                    <div>
+                      <router-link v-bind:to="`/users/${message.user['id']}`">
+                        <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
+                      </router-link>
+                      -
+                      <i class="text-muted">{{ relativeDate(message.updated_at) }}</i>
+                      <button
+                        v-if="profile == message.user['id'] && club.is_active"
+                        v-on:click="(messageEdit = message), (editContent = message.body)"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    <div v-if="messageEdit == message">
+                      <br />
+                      <button v-on:click="messageUpdate(message)">Save</button>
+                      <button v-on:click="messageEdit = ''">Cancel</button>
+                      <button v-on:click="messageDelete(message)">Delete</button>
+                    </div>
+                    <div v-else>
+                      <p><span v-html="message.body" class="text-muted fs-16"></span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <h6 class="lh-base fw-medium">Random Discussion</h6>
+                <ul class="list-unstyled my-4">
+                  <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
+                    <div v-if="message.category == 'informal'">
+                      <router-link v-bind:to="`/users/${message.user['id']}`">
+                        <img class="rounded-circle img-thumbnail" src="/images/clients/client-1.jpg" alt="user-image" />
+                      </router-link>
+                    </div>
+                    <div class="ps-4" v-if="message.category == 'informal'">
+                      <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
+                      <p class="text-muted">{{ relativeDate(message.updated_at) }}</p>
+                      <div v-if="messageEdit == message">
+                        <div id="editor"></div>
+                        {{ message.body }}
+                        <button v-on:click="messageUpdate(message)">Save</button>
+                        <button v-on:click="messageEdit = ''">Cancel</button>
+                        <button v-on:click="messageDelete(message)">Delete</button>
+                      </div>
+                      <p class="text-muted fs-16">
+                        <span v-html="message.body"></span>
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+                <div>
+                  <br />
+                  <div id="informal"></div>
+                  <br />
+                  <button v-on:click="messageCreate(1)" class="btn btn-primary">Add Message</button>
+                  <br />
+                  <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-members" role="tabpanel" aria-labelledby="nav-members-tab">
+                <h6 class="lh-base fw-medium">Members</h6>
+                <ul class="list-unstyled my-4">
+                  <li class="list-inline d-flex py-3" v-for="membership in club.memberships" v-bind:key="membership.id">
+                    <div>
+                      <a href="javascript:void(0)">
+                        <img
+                          class="rounded-circle img-thumbnail"
+                          :src="`${membership.user['image']}`"
+                          alt="member-image"
+                        />
+                      </a>
+                    </div>
+                    <div class="ps-4">
+                      <h6 class="d-inline-block fs-16 mb-0">{{ membership.user["name"] }}</h6>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- end nav -->
+            <!-- <div>
+              <h6 class="lh-base fw-semibold mt-4 mb-3">Add A Comment</h6>
+              <form method="post">
+                <div class="row g-4 mb-2">
+                  <div class="col-lg-12">
+                    <div class="form-floating mb-3">
+                      <textarea class="form-control" placeholder="Add a comment...." style="height: 100px"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12 mt-3">
+                    <a href="javascript:void(0)" class="btn btn-primary">
+                      Add Comment
+                      <i class="icon-xs" data-feather="chevrons-right"></i>
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div> -->
+          </div>
+        </div>
+        <!-- end row -->
+      </div>
+    </section>
     <div>
       <h1>
         {{ club.name }}
@@ -195,7 +412,7 @@ export default {
       <div v-if="club.is_active">
         <br />
         <h3>Create A Message</h3>
-        <div id="editor"></div>
+        <div id="formal"></div>
         <br />
         <button v-on:click="messageCreate(0)">Add Message</button>
         <br />
@@ -213,25 +430,23 @@ export default {
             -
             <i>{{ relativeDate(message.updated_at) }}</i>
             &nbsp;
-            <button
-              v-if="profile == message.user['id'] && club.is_active"
-              v-on:click="(messageEdit = message), (editContent = message.body)"
-            >
+            <button v-if="profile == message.user['id'] && club.is_active" v-on:click="openEditor(message)">
               Edit
             </button>
           </p>
           <div v-if="messageEdit == message">
-            <br />
+            <div id="editor"></div>
+            {{ message.body }}
             <button v-on:click="messageUpdate(message)">Save</button>
             <button v-on:click="messageEdit = ''">Cancel</button>
             <button v-on:click="messageDelete(message)">Delete</button>
           </div>
-          <div v-else><span v-html="message.body"></span></div>
+          <div><span v-html="message.body"></span></div>
         </div>
       </div>
       <div v-if="club.is_active">
         <br />
-        <div id="editor2"></div>
+        <div id="informal"></div>
         <br />
         <button v-on:click="messageCreate(1)">Add Message</button>
         <br />
@@ -252,11 +467,9 @@ export default {
   </div>
 </template>
 
-<style>
-/* TEMPORARY */
-img.user {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+<!-- <style scoped>
+img.rounded-circle img-thumbnail {
+  width: 100px;
+  height: auto;
 }
-</style>
+</style> -->

@@ -1,0 +1,71 @@
+// product.scss
+
+.cat-slider {
+    .cat-box {
+        border: 1px solid $gray-300;
+        transition: all 0.3s ease-in-out;
+        .cat-icon {
+            color: #93959c;
+        }
+        &:hover,
+        &.active,
+        &:active {
+            border: 1px solid $primary;
+            .cat-icon {
+                color: $primary;
+            }
+        }
+    }
+}
+
+.product-item {
+    .hover-content {
+        background-color: $light;
+        transition:  all 0.5s ease-in-out;
+        display: none;
+        .pro-icon {
+            color: $gray-600;
+            &:hover,
+            &.active {
+                color: $primary;
+            }
+        }        
+    }
+    &:hover,
+    &.active {
+        .hover-content {
+            display: block;
+        }
+    }
+}
+
+.pro-list-content {
+    .hover-content {
+        .pro-icon {
+            color: $gray-600;
+            &:hover,
+            &.active {
+                color: $primary;
+            }
+        }
+    }
+}
+
+.pro-detail-area {
+    .nav-tabs {
+        .nav-link {            
+            color: $dark;            
+        }
+    }
+    .detail-title {
+        &.nav-tabs .nav-item.show .nav-link,
+        &.nav-tabs .nav-link.active {
+            background-color: $primary;
+            color: $white;
+        }
+    }
+}
+
+.pay-text {
+    z-index: 1 !important;
+}

@@ -1,0 +1,35 @@
+// service.scss
+
+.ser-box {
+    position: relative;
+
+    &:after {
+        content: "";
+        width: 0%;
+        height: 1px;
+        background-color: $primary;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        border-radius: 3px;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .ser-icon {
+        color: $dark;
+    }
+
+    &:hover,
+    &.active {
+        .ser-icon {
+            color: $primary;
+        }
+        &::after {
+            opacity: 1;
+            width: 100%;
+            transform: translatex(1);
+        }
+    }
+}
