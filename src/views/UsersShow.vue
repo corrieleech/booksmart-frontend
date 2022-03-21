@@ -54,25 +54,46 @@ export default {
 
 <template>
   <div class="users-show">
-    <button v-if="profile == user.id" v-on:click="selectEdit()">Edit Profile</button>
-    <h1>Profile</h1>
-    <img :src="user.image" />
-    <h2>{{ user.name }}</h2>
-    <div>
-      <p>
-        {{ user.location }}
-        |
-        {{ user.twitter }}
-      </p>
-      <p>{{ user.about }}</p>
-    </div>
-    <div>
-      <h3>Book Clubs</h3>
-      <div v-for="club in user.clubs" v-bind:key="club.id">
-        <router-link v-bind:to="`/clubs/${club.id}`">{{ club.name }}</router-link>
-        <p v-if="!club.is_active">{{ club.is_active }}</p>
+    <section class="section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <img :src="user.image" alt="member-img" class="img-fluid rounded-3" />
+          </div>
+          <div class="col-lg-6">
+            <div>
+              <h4>{{ user.name }}</h4>
+            </div>
+            <div class="d-flex align-items-center py-3">
+              <h6 class="me-4">
+                Location :
+                <span class="fw-normal text-muted ms-1">{{ user.location }}</span>
+              </h6>
+              <h6>
+                Twitter :
+                <span class="fw-normal text-muted ms-1">{{ user.twitter }}</span>
+              </h6>
+            </div>
+
+            <h6>About</h6>
+            <p class="text-muted fs-15">{{ user.about }}</p>
+
+            <h6>Book Clubs</h6>
+            <ul>
+              <li v-for="club in user.clubs" v-bind:key="club.id">
+                <router-link v-bind:to="`/clubs/${club.id}`">{{ club.name }}</router-link>
+                <p v-if="!club.is_active">{{ club.is_active }}</p>
+              </li>
+            </ul>
+            <a v-if="profile == user.id" v-on:click="selectEdit()" class="btn btn-primary mt-3">
+              Edit Profile
+              <i class="icon-xs" data-feather="chevrons-right"></i>
+            </a>
+          </div>
+        </div>
       </div>
-    </div>
+      <!-- end container -->
+    </section>
   </div>
   <dialog id="user-edit">
     <form method="dialog">
@@ -108,5 +129,3 @@ export default {
     </form>
   </dialog>
 </template>
-
-<style></style>

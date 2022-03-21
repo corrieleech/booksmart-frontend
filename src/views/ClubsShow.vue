@@ -97,6 +97,9 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
+    openEditor: function (message) {
+      console.log(message);
+    },
     messageUpdate: function (message) {
       const index = this.club.messages.indexOf(message);
       const params = { body: this.editContent };
@@ -179,17 +182,21 @@ export default {
                   Reactivate Club
                 </button>
               </div>
-              <!-- CONTENT -->
+              <!-- Discussion Question Content -->
               <div class="col-md-7 mt-4">
                 <div class="pro-detail-content">
                   <div class="price my-3">
-                    <ins class="pe-2 fs-18 text-success fw-semibold text-decoration-none">$209.00</ins>
-                    <del class="text-muted fs-18">$230.00</del>
+                    <h3>
+                      <i>{{ club.book["title"] }}</i>
+                      <i v-if="club.book['subtitle']">: {{ club.book["subtitle"] }}</i>
+                    </h3>
+                    <h4>By {{ club.book["author"] }}</h4>
+                    <br />
+                    <ins class="pe-2 fs-18 text-success fw-semibold text-decoration-none">Discussion Questions</ins>
                   </div>
 
                   <p class="text-muted fs-16 my-3">
-                    The full monty brilliant young delinquent burke naff baking cakes the wireless argy-bargy smashing,
-                    squiffy chimney pot I he nicked it twit brolly spend a penny he legged it.
+                    <span v-if="club.details" v-html="`${club.details['disc_questions']}`"></span>
                   </p>
                 </div>
               </div>
@@ -209,22 +216,22 @@ export default {
               <div class="nav nav-tabs border-bottom detail-title" id="nav-tab" role="tablist">
                 <a
                   class="nav-link border-0 active"
-                  id="nav-home-tab"
+                  id="nav-formal-tab"
                   data-bs-toggle="tab"
-                  href="#nav-home"
+                  href="#nav-formal"
                   role="tab"
-                  aria-controls="nav-home"
+                  aria-controls="nav-formal"
                   aria-selected="true"
                 >
                   Formal Discussion
                 </a>
                 <a
                   class="nav-link border-0"
-                  id="nav-profile-tab"
+                  id="nav-informal-tab"
                   data-bs-toggle="tab"
-                  href="#nav-profile"
+                  href="#nav-informal"
                   role="tab"
-                  aria-controls="nav-profile"
+                  aria-controls="nav-informal"
                   aria-selected="false"
                 >
                   Informal Discussion
@@ -243,37 +250,47 @@ export default {
               </div>
             </nav>
             <div class="tab-content py-4" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <div v-for="message in club.messages" v-bind:key="message.id">
-                  <div v-show="message.category == 'formal'">
-                    <div>
+              <div class="tab-pane fade show active" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
+                <ul class="list-unstyled my-4">
+                  <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
+                    <div v-if="message.category == 'formal'">
                       <router-link v-bind:to="`/users/${message.user['id']}`">
-                        <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
+                        <img class="rounded-circle img-thumbnail" src="/images/clients/client-1.jpg" alt="user-image" />
                       </router-link>
-                      -
-                      <i class="text-muted">{{ relativeDate(message.updated_at) }}</i>
-                      <button
-                        v-if="profile == message.user['id'] && club.is_active"
-                        v-on:click="(messageEdit = message), (editContent = message.body)"
-                      >
-                        Edit
-                      </button>
                     </div>
-                    <div v-if="messageEdit == message">
-                      <br />
-                      <button v-on:click="messageUpdate(message)">Save</button>
-                      <button v-on:click="messageEdit = ''">Cancel</button>
-                      <button v-on:click="messageDelete(message)">Delete</button>
+                    <div class="ps-4" v-if="message.category == 'formal'">
+                      <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
+                      <p class="text-muted">
+                        {{ relativeDate(message.updated_at) }}
+                        <button
+                          v-if="profile == message.user['id'] && club.is_active"
+                          v-on:click="(messageEdit = message), (editContent = message.body)"
+                        >
+                          Edit
+                        </button>
+                      </p>
+                      <div v-if="messageEdit == message">
+                        <div id="editor"></div>
+                        {{ message.body }}
+                        <button v-on:click="messageUpdate(message)">Save</button>
+                        <button v-on:click="messageEdit = ''">Cancel</button>
+                        <button v-on:click="messageDelete(message)">Delete</button>
+                      </div>
+                      <p class="text-muted fs-16">
+                        <span v-html="message.body"></span>
+                      </p>
                     </div>
-                    <div v-else>
-                      <p><span v-html="message.body" class="text-muted fs-16"></span></p>
-                    </div>
-                  </div>
+                  </li>
+                </ul>
+                <div>
+                  <div id="formal"></div>
+                  <br />
+                  <button v-on:click="messageCreate(0)" class="btn btn-primary">Add Message</button>
+                  <br />
+                  <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
                 </div>
               </div>
-
-              <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <h6 class="lh-base fw-medium">Random Discussion</h6>
+              <div class="tab-pane fade" id="nav-informal" role="tabpanel" aria-labelledby="nav-informal-tab">
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
                     <div v-if="message.category == 'informal'">
@@ -283,7 +300,15 @@ export default {
                     </div>
                     <div class="ps-4" v-if="message.category == 'informal'">
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
-                      <p class="text-muted">{{ relativeDate(message.updated_at) }}</p>
+                      <p class="text-muted">
+                        {{ relativeDate(message.updated_at) }}
+                        <button
+                          v-if="profile == message.user['id'] && club.is_active"
+                          v-on:click="(messageEdit = message), (editContent = message.body)"
+                        >
+                          Edit
+                        </button>
+                      </p>
                       <div v-if="messageEdit == message">
                         <div id="editor"></div>
                         {{ message.body }}
@@ -352,124 +377,5 @@ export default {
         <!-- end row -->
       </div>
     </section>
-    <div>
-      <h1>
-        {{ club.name }}
-        <font-awesome-icon v-if="club['is_member?']" icon="circle-check" size="sm" />
-        <font-awesome-icon v-else icon="circle-plus" size="sm" />
-      </h1>
-      <h2 v-if="club.is_active">
-        (Active)
-        <button v-on:click="clubUpdate">Archive Club</button>
-      </h2>
-      <h2 v-else>
-        (Inactive)
-        <button v-on:click="clubUpdate">Reactivate Club</button>
-      </h2>
-      <button v-if="!club['is_member?']" v-on:click="membershipCreate()">Join Club</button>
-      <button v-else v-on:click="membershipDestroy()">Leave Club</button>
-      <br />
-      <br />
-      <img :src="`${club.book['cover_image']['href']}`" />
-      <p>
-        Book:
-        <i>{{ club.book["title"] }}</i>
-        <i v-if="club.book['subtitle']">: {{ club.book["subtitle"] }}</i>
-      </p>
-      <p>Author: {{ club.book["author"] }}</p>
-    </div>
-    <div>
-      <h2>Discussion Questions</h2>
-      <span v-if="club.details" v-html="`${club.details['disc_questions']}`"></span>
-    </div>
-    <div v-if="club['is_member?']">
-      <h2>Formal Messages</h2>
-      <div v-for="message in club.messages" v-bind:key="message.id">
-        <div v-if="message.category == 'formal'">
-          <p>
-            <router-link v-bind:to="`/users/${message.user['id']}`">
-              <b>{{ message.user["name"] }}</b>
-            </router-link>
-            -
-            <i>{{ relativeDate(message.updated_at) }}</i>
-            &nbsp;
-            <button
-              v-if="profile == message.user['id'] && club.is_active"
-              v-on:click="(messageEdit = message), (editContent = message.body)"
-            >
-              Edit
-            </button>
-          </p>
-          <div v-if="messageEdit == message">
-            <br />
-            <button v-on:click="messageUpdate(message)">Save</button>
-            <button v-on:click="messageEdit = ''">Cancel</button>
-            <button v-on:click="messageDelete(message)">Delete</button>
-          </div>
-          <div v-else><span v-html="message.body"></span></div>
-        </div>
-      </div>
-      <div v-if="club.is_active">
-        <br />
-        <h3>Create A Message</h3>
-        <div id="formal"></div>
-        <br />
-        <button v-on:click="messageCreate(0)">Add Message</button>
-        <br />
-        <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
-      </div>
-    </div>
-    <div v-if="club['is_member?']">
-      <h2>Informal Messages</h2>
-      <div v-for="message in club.messages" v-bind:key="message.id">
-        <div v-if="message.category == 'informal'">
-          <p>
-            <router-link v-bind:to="`/users/${message.user['id']}`">
-              <b>{{ message.user["name"] }}</b>
-            </router-link>
-            -
-            <i>{{ relativeDate(message.updated_at) }}</i>
-            &nbsp;
-            <button v-if="profile == message.user['id'] && club.is_active" v-on:click="openEditor(message)">
-              Edit
-            </button>
-          </p>
-          <div v-if="messageEdit == message">
-            <div id="editor"></div>
-            {{ message.body }}
-            <button v-on:click="messageUpdate(message)">Save</button>
-            <button v-on:click="messageEdit = ''">Cancel</button>
-            <button v-on:click="messageDelete(message)">Delete</button>
-          </div>
-          <div><span v-html="message.body"></span></div>
-        </div>
-      </div>
-      <div v-if="club.is_active">
-        <br />
-        <div id="informal"></div>
-        <br />
-        <button v-on:click="messageCreate(1)">Add Message</button>
-        <br />
-        <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
-      </div>
-    </div>
-    <div>
-      <h2>Members</h2>
-      <div v-for="membership in club.memberships" v-bind:key="membership.id">
-        <p>
-          <router-link v-bind:to="`/users/${membership.user['id']}`">
-            <img class="user" :src="`${membership.user['image']}`" />
-          </router-link>
-          <router-link v-bind:to="`/users/${membership.user['id']}`">{{ membership.user["name"] }}</router-link>
-        </p>
-      </div>
-    </div>
   </div>
 </template>
-
-<!-- <style scoped>
-img.rounded-circle img-thumbnail {
-  width: 100px;
-  height: auto;
-}
-</style> -->
