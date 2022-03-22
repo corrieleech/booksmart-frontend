@@ -1,5 +1,15 @@
 <template>
   <div class="about">
+    <!-- start title -->
+    <section class="section bg-light">
+      <div class="container">
+        <div class="row align-items-center text-center">
+          <div class="col-lg-12 mt-5 pt-3">
+            <h2 class="fw-bold">What is BookSmart?</h2>
+          </div>
+        </div>
+      </div>
+    </section>
     <section class="sm-section">
       <div class="container">
         <div class="row align-items-center">
@@ -21,14 +31,11 @@
             </div>
           </div>
           <div class="col-lg-6 offset-lg-1 mt-lg-0 mt-4">
-            <div>
-              <h3 class="text-muted">
-                "The answers you get from literature depend on the questions you pose." — Margaret Atwood
-              </h3>
-            </div>
             <div class="border-bottom py-3">
               <span class="text-primary"><i class="icon-md" data-feather="users"></i></span>
-              <h4 class="lh-base mt-3">What is BookSmart?</h4>
+              <h4 class="lh-base mt-3">
+                "The answers you get from literature depend on the questions you pose." — Margaret Atwood
+              </h4>
             </div>
             <p class="text-muted pt-4">
               BookSmart is a place for book lovers who don't have the time, current network or desire to join an

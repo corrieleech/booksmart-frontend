@@ -33,7 +33,7 @@ export default {
       <div class="container">
         <router-link to="/clubs" class="navbar-brand me-4">
           <img src="/images/logo-light.png" class="logo-light" alt="" height="40" />
-          <img src="/images/logo-icon.png" class="logo-dark" alt="" height="40" />
+          <img src="/images/booksmartlogosmall.png" class="logo-dark" alt="" height="40" />
         </router-link>
 
         <div class="navbar-header">

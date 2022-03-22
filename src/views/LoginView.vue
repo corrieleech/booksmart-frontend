@@ -48,7 +48,7 @@ export default {
             <div class="bg-light shadow rounded-3 p-4">
               <div class="text-center">
                 <a href="index.html" class="d-inline-block my-4">
-                  <img src="images/logo-icon.png" class="logo-dark" alt="" height="60" />
+                  <img src="images/booksmartlogosmall.png" class="logo-dark" alt="" height="60" />
                 </a>
                 <h4 class="fw-bold mb-2">Welcome Back</h4>
                 <p class="text-muted fs-15 mb-0">Log in to your account</p>
