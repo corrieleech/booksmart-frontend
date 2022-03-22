@@ -54,6 +54,17 @@ export default {
 
 <template>
   <div class="users-show">
+    <!-- start title -->
+    <section class="section bg-light title-section">
+      <div class="container">
+        <div class="row align-items-center text-center">
+          <div class="col-lg-12 mt-5 pt-3">
+            <h2 class="fw-bold">Member Profile</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end title -->
     <section class="section">
       <div class="container">
         <div class="row align-items-center">
@@ -82,7 +93,7 @@ export default {
             <ul>
               <li v-for="club in user.clubs" v-bind:key="club.id">
                 <router-link v-bind:to="`/clubs/${club.id}`">{{ club.name }}</router-link>
-                <p v-if="!club.is_active">{{ club.is_active }}</p>
+                <i v-if="!club.is_active">&nbsp;(inactive)</i>
               </li>
             </ul>
             <a v-if="profile == user.id" v-on:click="selectEdit()" class="btn btn-primary mt-3">

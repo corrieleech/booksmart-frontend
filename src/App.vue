@@ -17,19 +17,8 @@ export default {
 
 <template>
   <div>
-    <!-- light-dark mode button -->
-    <a
-      href="javascript: void(0);"
-      id="mode"
-      data-class="light"
-      class="p-3 text-white rounded-circle mode-btn"
-      onclick="changeMode(event)"
-    >
-      <i class="icon-xs fs-24 mode-dark" data-feather="moon"></i>
-      <i class="icon-xs fs-24 bx-spin mode-light" data-feather="sun"></i>
-    </a>
     <!-- Start Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top sticky mx-auto" id="navbar">
+    <nav class="navbar navbar-expand-lg fixed-top sticky mx-auto nav-sticky" id="navbar">
       <div class="container">
         <router-link to="/clubs" class="navbar-brand me-4">
           <img src="/images/logo-light.png" class="logo-light" alt="" height="40" />
@@ -68,30 +57,19 @@ export default {
             </li>
           </ul>
           <div class="ms-auto">
-            <router-link to="/login" v-if="!isLoggedIn" class="log-text fw-semibold fs-16 me-4 pe-4 border-end">
+            <router-link to="/login" v-if="!isLoggedIn" class="log-text fw-semibold fs-16 me-4 pe-4">
               Log In
             </router-link>
-            <router-link
-              v-bind:to="`/users/${profile}`"
-              v-if="isLoggedIn"
-              class="log-text fw-semibold fs-16 me-4 pe-4 border-end"
-            >
+            <router-link v-bind:to="`/users/${profile}`" v-if="isLoggedIn" class="log-text fw-semibold fs-16 me-4 pe-4">
               My Profile
             </router-link>
-            <a href="cart.html" class="cart-icon position-relative d-inline-block">
-              <span class="cart-count bg-danger text-white fw-medium text-center rounded-circle shadow fs-12"></span>
-              <i class="icon-s" data-feather="shopping-cart"></i>
-            </a>
           </div>
         </div>
       </div>
     </nav>
     <!-- END NAVBAR -->
 
-    <section class="section">
-      <router-view />
-    </section>
-
+    <router-view />
     <!-- START FOOTER ALTER -->
     <div class="footer-alter bg-light py-3">
       <div class="container">

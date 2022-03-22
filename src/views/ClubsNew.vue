@@ -37,7 +37,7 @@ export default {
 <template>
   <div class="clubs-new">
     <!-- start title -->
-    <section class="section bg-light">
+    <section class="section bg-light title-section">
       <div class="container">
         <div class="row align-items-center text-center">
           <div class="col-lg-12 mt-5 pt-3">

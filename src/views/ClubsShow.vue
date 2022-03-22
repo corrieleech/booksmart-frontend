@@ -138,7 +138,7 @@ export default {
 <template>
   <div class="clubs-show">
     <!-- start title -->
-    <section class="section bg-light">
+    <section class="section bg-light title-section">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
           <div class="col-lg-8 mt-5 pt-3">
@@ -379,3 +379,9 @@ export default {
     </section>
   </div>
 </template>
+
+<style scoped>
+img.rounded-circle.img-thumbnail {
+  width: 100px;
+}
+</style>
