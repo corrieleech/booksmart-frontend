@@ -41,9 +41,12 @@ export default {
     <!-- shuffle portfolio -->
     <section class="sm-section">
       <div class="container">
-        <div>
-          Quick Search by Title:
-          <input type="text" v-model="searchParams" list="clubTitles" />
+        <div class="d-flex justify-content-center">
+          <p class="text-muted fs-16">
+            Quick Search by Title:
+            <input type="text" v-model="searchParams" list="clubTitles" />
+          </p>
+
           <datalist id="clubTitles">
             <option v-for="club in clubs" v-bind:key="club.id">{{ club.book["title"] }}</option>
           </datalist>

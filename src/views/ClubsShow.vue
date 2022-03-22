@@ -55,6 +55,8 @@ export default {
         console.log("Membership create:", response.data);
         this.club.memberships.push(response.data);
         this.club["is_member?"] = true;
+        this.formalCreateQuill = new Quill("#formal", this.options);
+        this.informalCreateQuill = new Quill("#informal", this.options);
       });
     },
     membershipDestroy: function () {
@@ -144,8 +146,14 @@ export default {
           <div class="col-lg-8 mt-5 pt-3">
             <h2 class="fw-bold">
               {{ club.name }}
-              <font-awesome-icon v-if="club['is_member?']" icon="circle-check" size="sm" />
-              <font-awesome-icon v-else icon="circle-plus" size="sm" />
+              <font-awesome-icon
+                v-if="club['is_member?']"
+                icon="circle-check"
+                size="sm"
+                color="#1fdfa5"
+                v-on:click="membershipDestroy()"
+              />
+              <font-awesome-icon v-else icon="circle-plus" size="sm" v-on:click="membershipCreate()" />
             </h2>
             <h4 class="fw-bold" v-if="!club.is_active">(Inactive)</h4>
           </div>
@@ -163,10 +171,6 @@ export default {
                 <div class="position-relative">
                   <img class="img-fluid rounded-3" img :src="`${club.book['cover_image']['href']}`" alt="cook-cover" />
                 </div>
-                <button class="btn btn-primary me-2 my-2" v-if="!club['is_member?']" v-on:click="membershipCreate()">
-                  Join Club
-                </button>
-                <button v-else v-on:click="membershipDestroy()" class="btn btn-secondary my-2">Leave Club</button>
                 <button
                   v-if="club.is_active && club['is_member?']"
                   class="btn btn-secondary mr-2 my-2"
@@ -208,7 +212,7 @@ export default {
     <!-- end pro-detail -->
 
     <!-- detail tab -->
-    <section class="section bg-light" v-if="club['is_member?']">
+    <section class="section bg-light" v-show="club['is_member?']">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
@@ -383,5 +387,9 @@ export default {
 <style scoped>
 img.rounded-circle.img-thumbnail {
   width: 100px;
+}
+
+fa-circle-check {
+  color: #1fdfa5;
 }
 </style>

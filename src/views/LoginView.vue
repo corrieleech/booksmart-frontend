@@ -117,24 +117,5 @@ export default {
         </div>
       </div>
     </section>
-    <form v-on:submit.prevent="submit()">
-      <h1>Welcome Back</h1>
-      <ul>
-        <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-      </ul>
-      <div>
-        <label>Email:</label>
-        <input type="email" v-model="newSessionParams.email" />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" v-model="newSessionParams.password" />
-      </div>
-      <input type="submit" value="Submit" />
-    </form>
-    <p>
-      Don't have have an account?
-      <router-link to="/signup">Sign up</router-link>
-    </p>
   </div>
 </template>

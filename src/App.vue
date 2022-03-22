@@ -75,24 +75,22 @@ export default {
       <div class="container">
         <div class="row align-items-center">
           <div class="col-lg-6">
-            <div class="text-muted">
-              2022 &copy; Xacon by
-              <a class="text-dark text-decoration-underline" href="#!">Pichforest</a>
-            </div>
+            <div class="text-muted">2022 &copy; Corz</div>
           </div>
           <div class="col-lg-6">
             <ul class="list-inline d-sm-flex social-circle float-sm-end my-sm-0 my-3 mb-0">
               <li class="list-inline-item text-center">
-                <a href="javascript:void(0)" class="fs-18 d-inline-block"><i class="mdi mdi-facebook"></i></a>
+                <a href="https://www.linkedin.com/in/corrieleech/" class="fs-18 d-inline-block">
+                  <i class="mdi mdi-linkedin"></i>
+                </a>
               </li>
               <li class="list-inline-item text-center">
-                <a href="javascript:void(0)" class="fs-18 d-inline-block"><i class="mdi mdi-twitter"></i></a>
+                <a href="https://twitter.com/corrieleech" class="fs-18 d-inline-block">
+                  <i class="mdi mdi-twitter"></i>
+                </a>
               </li>
               <li class="list-inline-item text-center">
-                <a href="javascript:void(0)" class="fs-18 d-inline-block"><i class="mdi mdi-google"></i></a>
-              </li>
-              <li class="list-inline-item text-center">
-                <a href="javascript:void(0)" class="fs-18 d-inline-block"><i class="mdi mdi-instagram"></i></a>
+                <a href="https://github.com/corrieleech" class="fs-18 d-inline-block"><i class="mdi mdi-github"></i></a>
               </li>
             </ul>
           </div>
