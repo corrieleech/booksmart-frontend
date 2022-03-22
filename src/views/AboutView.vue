@@ -7,15 +7,15 @@
             <div class="row">
               <div class="col-md-6 mt-4">
                 <div class="mt-3">
-                  <img src="images/about/team-1.jpg" class="img-fluid rounded-3 border" alt="" />
+                  <img src="/images/aliasgrace.jpeg" class="img-fluid rounded-3 border" alt="" />
                 </div>
                 <div class="mt-4">
-                  <img src="images/about/team-2.jpg" class="img-fluid rounded-3 border" alt="" />
+                  <img src="/images/thingsfallapart.jpeg" class="img-fluid rounded-3 border" alt="" />
                 </div>
               </div>
               <div class="col-md-6 my-auto">
                 <div class="mt-md-0 mt-4">
-                  <img src="images/about/team-3.jpg" class="img-fluid rounded-3 border" alt="" />
+                  <img src="/images/joyluckclub.jpeg" class="img-fluid rounded-3 border" alt="" />
                 </div>
               </div>
             </div>
@@ -33,8 +33,11 @@
             <p class="text-muted pt-4">
               BookSmart is a place for book lovers who don't have the time, current network or desire to join an
               in-person book club but crave quality discussions about the books they read.
+              <br />
+              <br />
+              Get started by joining a club or creating a new one.
             </p>
-            <router-link to="/clubs" class="btn btn-primary mt-3">Get Started</router-link>
+            <router-link to="/clubs" class="btn btn-primary mt-3">Join a Club</router-link>
           </div>
         </div>
       </div>
