@@ -340,13 +340,13 @@ export default {
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="membership in club.memberships" v-bind:key="membership.id">
                     <div>
-                      <a href="javascript:void(0)">
+                      <router-link v-bind:to="`/users/${membership.user['id']}`">
                         <img
                           class="rounded-circle img-thumbnail"
                           :src="`${membership.user['image']}`"
-                          alt="member-image"
+                          alt="user-image"
                         />
-                      </a>
+                      </router-link>
                     </div>
                     <div class="ps-4">
                       <h6 class="d-inline-block fs-16 mb-0">{{ membership.user["name"] }}</h6>
