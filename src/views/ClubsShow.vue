@@ -14,10 +14,12 @@ export default {
         book: {
           cover_image: "",
         },
+        messages: [],
       },
       formalCreateQuill: {},
       informalCreateQuill: {},
       editorFormal: {},
+      editorInformal: {},
       contents: "",
       messageBody: "",
       categoryType: "",
@@ -276,6 +278,7 @@ export default {
             <!-- FORMAL TAB -->
             <div class="tab-content py-4" id="nav-tabContent">
               <div class="tab-pane fade show active" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
+                <h6 class="lh-base fw-medium">Discussion Question Answers</h6>
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in formalMessages" v-bind:key="message.id">
                     <div>
@@ -285,6 +288,7 @@ export default {
                     </div>
                     <div class="ps-4">
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
+                      <div class="rating d-inline-block ps-sm-4"></div>
                       <p class="text-muted">
                         {{ relativeDate(message.updated_at) }}
                         <font-awesome-icon
@@ -293,6 +297,9 @@ export default {
                           v-if="profile == message.user['id'] && club.is_active"
                           v-on:click="(messageEdit = message), (editContent = message.body)"
                         />
+                      </p>
+                      <p class="text-muted fs-16">
+                        <span v-html="message.body"></span>
                       </p>
                       <div v-show="messageEdit == message">
                         <div id="editorFormal"></div>
@@ -304,11 +311,6 @@ export default {
                             Delete
                           </button>
                         </div>
-                      </div>
-                      <div>
-                        <p class="text-muted fs-16">
-                          <span v-html="message.body"></span>
-                        </p>
                       </div>
                     </div>
                   </li>
@@ -323,6 +325,7 @@ export default {
               </div>
               <!-- INFORMAL TAB -->
               <div class="tab-pane fade" id="nav-informal" role="tabpanel" aria-labelledby="nav-informal-tab">
+                <h6 class="lh-base fw-medium">Random Thoughts</h6>
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in informalMessages" v-bind:key="message.id">
                     <div>

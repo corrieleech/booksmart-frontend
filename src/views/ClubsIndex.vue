@@ -46,12 +46,16 @@ export default {
             Quick Search by Title:
             <input type="text" v-model="searchParams" list="clubTitles" />
           </p>
-
           <datalist id="clubTitles">
             <option v-for="club in clubs" v-bind:key="club.id">{{ club.book["title"] }}</option>
           </datalist>
         </div>
-        <div id="grid" class="row">
+        <div class="d-flex justify-content-center text-muted" v-if="clubs.length == 0">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading Current Clubs...</span>
+          </div>
+        </div>
+        <div v-else id="grid" class="row">
           <div v-for="club in searchClubs" v-bind:key="club.id" class="col-lg-4 col-md-6 col-12 spacing picture-item">
             <div class="card border-0 work-container work-grid position-relative d-block overflow-hidden rounded">
               <div class="card-body p-0">
