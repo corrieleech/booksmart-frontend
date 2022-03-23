@@ -41,7 +41,7 @@ export default {
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="nav-item">
-              <router-link to="/about" class="nav-link sub-menu-item">About</router-link>
+              <router-link to="/" class="nav-link sub-menu-item">About</router-link>
             </li>
             <li class="nav-item">
               <router-link to="/clubs" class="nav-link sub-menu-item active">All Clubs</router-link>

@@ -5,6 +5,7 @@ export default {
   data: function () {
     return {
       search: {},
+      searching: false,
       possibleBooks: [],
       hasSearched: false,
       clubName: "",
@@ -13,11 +14,15 @@ export default {
   created: function () {},
   methods: {
     searchTitle: function () {
+      this.searching = true;
+      this.possibleBooks = [];
+      this.hasSearched = false;
       const params = { params: this.search };
       axios.get("/books", params).then((response) => {
         console.log("Search", response.data);
         this.possibleBooks = response.data;
         this.hasSearched = true;
+        this.searching = false;
       });
     },
     createClub: function (book) {
@@ -68,10 +73,22 @@ export default {
                     <input type="text" v-model="search.title_search" />
                   </div>
                   <div class="hover-content">
-                    <button v-if="!hasSearched" v-on:click="searchTitle()" class="btn btn-primary me-2 my-2">
+                    <button
+                      v-if="!hasSearched && !searching"
+                      v-on:click="searchTitle()"
+                      class="btn btn-primary me-2 my-2"
+                    >
                       Search for Title
                     </button>
-                    <button v-else v-on:click="searchTitle()" class="btn btn-secondary me-2 my-2">
+                    <button v-if="searching" class="btn btn-primary me-2 my-2">
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Searching...
+                    </button>
+                    <button
+                      v-if="!searching && hasSearched"
+                      v-on:click="searchTitle()"
+                      class="btn btn-secondary me-2 my-2"
+                    >
                       Search for Title
                     </button>
                   </div>

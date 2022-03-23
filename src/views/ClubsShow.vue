@@ -198,7 +198,6 @@ export default {
                     <br />
                     <ins class="pe-2 fs-18 text-success fw-semibold text-decoration-none">Discussion Questions</ins>
                   </div>
-
                   <p class="text-muted fs-16 my-3">
                     <span v-if="club.details" v-html="`${club.details['disc_questions']}`"></span>
                   </p>
@@ -259,7 +258,7 @@ export default {
                   <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
                     <div v-if="message.category == 'formal'">
                       <router-link v-bind:to="`/users/${message.user['id']}`">
-                        <img class="rounded-circle img-thumbnail" src="/images/clients/client-1.jpg" alt="user-image" />
+                        <img class="rounded-circle img-thumbnail" :src="`${message.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
                     <div class="ps-4" v-if="message.category == 'formal'">
@@ -286,7 +285,7 @@ export default {
                     </div>
                   </li>
                 </ul>
-                <div>
+                <div v-show="club.is_active">
                   <div id="formal"></div>
                   <br />
                   <button v-on:click="messageCreate(0)" class="btn btn-primary">Add Message</button>
@@ -299,7 +298,7 @@ export default {
                   <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
                     <div v-if="message.category == 'informal'">
                       <router-link v-bind:to="`/users/${message.user['id']}`">
-                        <img class="rounded-circle img-thumbnail" src="/images/clients/client-1.jpg" alt="user-image" />
+                        <img class="rounded-circle img-thumbnail" :src="`${message.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
                     <div class="ps-4" v-if="message.category == 'informal'">
@@ -309,6 +308,7 @@ export default {
                         <button
                           v-if="profile == message.user['id'] && club.is_active"
                           v-on:click="(messageEdit = message), (editContent = message.body)"
+                          class="btn btn-outline-secondary"
                         >
                           Edit
                         </button>
@@ -326,7 +326,7 @@ export default {
                     </div>
                   </li>
                 </ul>
-                <div>
+                <div v-show="club.is_active">
                   <br />
                   <div id="informal"></div>
                   <br />
@@ -355,30 +355,8 @@ export default {
                 </ul>
               </div>
             </div>
-            <!-- end nav -->
-            <!-- <div>
-              <h6 class="lh-base fw-semibold mt-4 mb-3">Add A Comment</h6>
-              <form method="post">
-                <div class="row g-4 mb-2">
-                  <div class="col-lg-12">
-                    <div class="form-floating mb-3">
-                      <textarea class="form-control" placeholder="Add a comment...." style="height: 100px"></textarea>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-12 mt-3">
-                    <a href="javascript:void(0)" class="btn btn-primary">
-                      Add Comment
-                      <i class="icon-xs" data-feather="chevrons-right"></i>
-                    </a>
-                  </div>
-                </div>
-              </form>
-            </div> -->
           </div>
         </div>
-        <!-- end row -->
       </div>
     </section>
   </div>

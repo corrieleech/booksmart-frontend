@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="home">
     <!-- start title -->
     <section class="section bg-light title-section">
       <div class="container">
