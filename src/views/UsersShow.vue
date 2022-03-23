@@ -112,86 +112,56 @@ export default {
       </div>
       <!-- end container -->
     </section>
-  </div>
 
-  <dialog id="user-edit">
-    <form method="dialog">
-      <h2>Edit Profile</h2>
-      <label for="name">Name:</label>
-      <input type="text" id="name" v-model="updateUserParams.name" />
-      <br />
-      <br />
-      <label for="location">Location:</label>
-      <input type="text" id="location" v-model="updateUserParams.location" />
-      <br />
-      <br />
-      <label for="twitter">Twitter Handle:</label>
-      <input type="text" id="twitter" v-model="updateUserParams.twitter" />
-      <br />
-      <br />
-      <label for="about">About:</label>
-      <textarea type="text" id="about" v-model="updateUserParams.about" />
-      <br />
-      <br />
-      <label for="image">Image Url:</label>
-      <input type="text" id="image" v-model="updateUserParams.image" />
-      <br />
-      <br />
-      <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-      <button value="default" class="btn btn-primary mt-3" v-on:click="updateUser(updateUserParams)">Update</button>
-      <br />
-      <button v-on:click="deleteUser(updateUserParams)" class="btn btn-secondary mt-3">Delete Profile</button>
-      <br />
-      <br />
-      <button value="cancel">Cancel</button>
-    </form>
-  </dialog>
-  <!-- MODAL -->
-  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editProfileModal">Edit Profile</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="user-name" class="col-form-label">Name:</label>
-              <input type="text" class="form-control" id="user-name" v-model="updateUserParams.name" />
-            </div>
-            <div class="mb-3">
-              <label for="location" class="col-form-label">Location:</label>
-              <input type="text" class="form-control" id="location" v-model="updateUserParams.location" />
-            </div>
-            <div class="mb-3">
-              <label for="twitter-handle" class="col-form-label">Twitter Handle:</label>
-              <input type="text" class="form-control" id="twitter-handle" v-model="updateUserParams.twitter" />
-            </div>
-            <div class="mb-3">
-              <label for="about" class="col-form-label">About:</label>
-              <textarea
-                class="form-control"
-                id="about"
-                v-model="updateUserParams.about"
-                rows="5"
-                style="height: 100%"
-              ></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="image-url" class="col-form-label">Image URL:</label>
-              <input type="text" class="form-control" id="image-url" v-model="updateUserParams.image" />
-            </div>
-          </form>
-          <p class="warning" v-for="error in errors" v-bind:key="error">{{ error }}</p>
-        </div>
-        <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-          <button type="button" class="btn btn-primary" v-on:click="updateUser(updateUserParams)">Save Changes</button>
+    <!-- MODAL -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModal">Edit Profile</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="user-name" class="col-form-label">Name:</label>
+                <input type="text" class="form-control" id="user-name" v-model="updateUserParams.name" />
+              </div>
+              <div class="mb-3">
+                <label for="location" class="col-form-label">Location:</label>
+                <input type="text" class="form-control" id="location" v-model="updateUserParams.location" />
+              </div>
+              <div class="mb-3">
+                <label for="twitter-handle" class="col-form-label">Twitter Handle:</label>
+                <input type="text" class="form-control" id="twitter-handle" v-model="updateUserParams.twitter" />
+              </div>
+              <div class="mb-3">
+                <label for="about" class="col-form-label">About:</label>
+                <textarea
+                  class="form-control"
+                  id="about"
+                  v-model="updateUserParams.about"
+                  rows="5"
+                  style="height: 100%"
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="image-url" class="col-form-label">Image URL:</label>
+                <input type="text" class="form-control" id="image-url" v-model="updateUserParams.image" />
+              </div>
+            </form>
+            <p class="warning" v-for="error in errors" v-bind:key="error">{{ error }}</p>
+          </div>
+          <div class="modal-footer">
+            <button v-on:click="deleteUser(updateUserParams)" class="btn btn-secondary justify-content-left">
+              Delete Profile
+            </button>
+            <button type="button" class="btn btn-primary" v-on:click="updateUser(updateUserParams)">
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<!-- <button v-on:click="deleteUser(updateUserParams)" class="btn btn-secondary mt-3">Delete Profile</button> -->
