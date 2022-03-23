@@ -42,7 +42,7 @@ export default {
             <div class="bg-light shadow rounded-3 p-4">
               <div class="text-center">
                 <router-link to="/home" class="d-inline-block my-4">
-                  <img src="/images/lbooksmartlogosmall.png" class="logo-dark" alt="" height="60" />
+                  <img src="/images/booksmartlogolg1.png" class="logo-dark" alt="" height="60" />
                 </router-link>
                 <h4 class="fw-bold mb-2">Welcome to BookSmart</h4>
                 <p class="text-muted fs-15 mb-0">Create your account and</p>

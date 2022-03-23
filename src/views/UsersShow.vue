@@ -1,4 +1,5 @@
 <script>
+/* global bootstrap */
 import axios from "axios";
 
 export default {
@@ -7,6 +8,7 @@ export default {
       user: {},
       updateUserParams: {},
       errors: [],
+      editOn: false,
       profile: localStorage.getItem("profile"),
     };
   },
@@ -27,7 +29,8 @@ export default {
         .then((response) => {
           console.log("Updated", response.data);
           this.errors = [];
-          this.$router.push(`/users/${this.user.id}`);
+          var editProfileModal = bootstrap.Modal.getInstance(document.getElementById("editProfileModal"));
+          editProfileModal.hide();
         })
         .catch((error) => {
           console.log(error.response.data.errors);
@@ -85,7 +88,6 @@ export default {
                 <span class="fw-normal text-muted ms-1">{{ user.twitter }}</span>
               </h6>
             </div>
-
             <h6>About</h6>
             <p class="text-muted fs-15">{{ user.about }}</p>
 
@@ -96,16 +98,22 @@ export default {
                 <i v-if="!club.is_active">&nbsp;(inactive)</i>
               </li>
             </ul>
-            <a v-if="profile == user.id" v-on:click="selectEdit()" class="btn btn-primary mt-3">
+            <button
+              v-if="profile == user.id"
+              class="btn btn-primary mt-3"
+              data-bs-toggle="modal"
+              data-bs-target="#editProfileModal"
+              v-on:click="this.updateUserParams = this.user"
+            >
               Edit Profile
-              <i class="icon-xs" data-feather="chevrons-right"></i>
-            </a>
+            </button>
           </div>
         </div>
       </div>
       <!-- end container -->
     </section>
   </div>
+
   <dialog id="user-edit">
     <form method="dialog">
       <h2>Edit Profile</h2>
@@ -122,7 +130,7 @@ export default {
       <br />
       <br />
       <label for="about">About:</label>
-      <input type="text" id="about" v-model="updateUserParams.about" />
+      <textarea type="text" id="about" v-model="updateUserParams.about" />
       <br />
       <br />
       <label for="image">Image Url:</label>
@@ -130,13 +138,60 @@ export default {
       <br />
       <br />
       <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-      <button value="default" v-on:click="updateUser(updateUserParams)">Update</button>
+      <button value="default" class="btn btn-primary mt-3" v-on:click="updateUser(updateUserParams)">Update</button>
       <br />
-      <br />
-      <button v-on:click="deleteUser(updateUserParams)">Delete Profile</button>
+      <button v-on:click="deleteUser(updateUserParams)" class="btn btn-secondary mt-3">Delete Profile</button>
       <br />
       <br />
       <button value="cancel">Cancel</button>
     </form>
   </dialog>
+  <!-- MODAL -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModal">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="user-name" class="col-form-label">Name:</label>
+              <input type="text" class="form-control" id="user-name" v-model="updateUserParams.name" />
+            </div>
+            <div class="mb-3">
+              <label for="location" class="col-form-label">Location:</label>
+              <input type="text" class="form-control" id="location" v-model="updateUserParams.location" />
+            </div>
+            <div class="mb-3">
+              <label for="twitter-handle" class="col-form-label">Twitter Handle:</label>
+              <input type="text" class="form-control" id="twitter-handle" v-model="updateUserParams.twitter" />
+            </div>
+            <div class="mb-3">
+              <label for="about" class="col-form-label">About:</label>
+              <textarea
+                class="form-control"
+                id="about"
+                v-model="updateUserParams.about"
+                rows="5"
+                style="height: 100%"
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="image-url" class="col-form-label">Image URL:</label>
+              <input type="text" class="form-control" id="image-url" v-model="updateUserParams.image" />
+            </div>
+          </form>
+          <p class="warning" v-for="error in errors" v-bind:key="error">{{ error }}</p>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-primary" v-on:click="updateUser(updateUserParams)">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
+<!-- <button v-on:click="deleteUser(updateUserParams)" class="btn btn-secondary mt-3">Delete Profile</button> -->
