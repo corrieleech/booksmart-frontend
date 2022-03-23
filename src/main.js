@@ -16,6 +16,6 @@ if (jwt) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
 }
 
-library.add(faCircleCheck, faCirclePlus), faTrashCan, faPenToSquare;
+library.add(faCircleCheck, faCirclePlus, faTrashCan, faPenToSquare);
 
 createApp(App).component("font-awesome-icon", FontAwesomeIcon).use(router).mount("#app");

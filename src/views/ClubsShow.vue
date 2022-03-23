@@ -171,16 +171,20 @@ export default {
                 <div class="position-relative">
                   <img class="img-fluid rounded-3" img :src="`${club.book['cover_image']['href']}`" alt="cook-cover" />
                 </div>
+                <button class="btn btn-primary my-2" v-if="!club['is_member?']" v-on:click="membershipCreate()">
+                  Join Club
+                </button>
+                <button v-else v-on:click="membershipDestroy()" class="btn btn-secondary mr-2 my-2">Leave Club</button>
                 <button
                   v-if="club.is_active && club['is_member?']"
-                  class="btn btn-secondary mr-2 my-2"
+                  class="btn btn-outline-secondary ml-2 my-2"
                   v-on:click="clubUpdate"
                 >
                   Archive Club
                 </button>
                 <button
                   v-if="!club.is_active && club['is_member?']"
-                  class="btn btn-primary mr-2 my-2"
+                  class="btn btn-primary ml-2 my-2"
                   v-on:click="clubUpdate"
                 >
                   Reactivate Club
@@ -265,19 +269,22 @@ export default {
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
                       <p class="text-muted">
                         {{ relativeDate(message.updated_at) }}
-                        <button
+                        <font-awesome-icon
+                          icon="pen-to-square"
+                          size="lg"
                           v-if="profile == message.user['id'] && club.is_active"
                           v-on:click="(messageEdit = message), (editContent = message.body)"
-                        >
-                          Edit
-                        </button>
+                        />
                       </p>
+
                       <div v-if="messageEdit == message">
                         <div id="editor"></div>
                         {{ message.body }}
-                        <button v-on:click="messageUpdate(message)">Save</button>
-                        <button v-on:click="messageEdit = ''">Cancel</button>
-                        <button v-on:click="messageDelete(message)">Delete</button>
+                        <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
+                        <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
+                        <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
+                          Delete
+                        </button>
                       </div>
                       <p class="text-muted fs-16">
                         <span v-html="message.body"></span>
@@ -305,20 +312,21 @@ export default {
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
                       <p class="text-muted">
                         {{ relativeDate(message.updated_at) }}
-                        <button
+                        <font-awesome-icon
+                          icon="pen-to-square"
+                          size="lg"
                           v-if="profile == message.user['id'] && club.is_active"
                           v-on:click="(messageEdit = message), (editContent = message.body)"
-                          class="btn btn-outline-secondary"
-                        >
-                          Edit
-                        </button>
+                        />
                       </p>
                       <div v-if="messageEdit == message">
                         <div id="editor"></div>
                         {{ message.body }}
-                        <button v-on:click="messageUpdate(message)">Save</button>
-                        <button v-on:click="messageEdit = ''">Cancel</button>
-                        <button v-on:click="messageDelete(message)">Delete</button>
+                        <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
+                        <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
+                        <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
+                          Delete
+                        </button>
                       </div>
                       <p class="text-muted fs-16">
                         <span v-html="message.body"></span>
