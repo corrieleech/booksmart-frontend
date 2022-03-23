@@ -69,7 +69,7 @@ export default {
     </nav>
     <!-- END NAVBAR -->
 
-    <router-view />
+    <router-view :key="$route.fullPath" />
     <!-- START FOOTER ALTER -->
     <div class="footer-alter bg-light py-3">
       <div class="container">

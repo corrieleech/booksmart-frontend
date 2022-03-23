@@ -10,10 +10,14 @@ export default {
   data: function () {
     return {
       profile: localStorage.getItem("profile"),
-      club: {},
+      club: {
+        book: {
+          cover_image: "",
+        },
+      },
       formalCreateQuill: {},
       informalCreateQuill: {},
-      editor: {},
+      editorFormal: {},
       contents: "",
       messageBody: "",
       categoryType: "",
@@ -47,6 +51,19 @@ export default {
   mounted: function () {
     this.formalCreateQuill = new Quill("#formal", this.options);
     this.informalCreateQuill = new Quill("#informal", this.options);
+    this.editorFormal = new Quill("#editorFormal", this.options);
+  },
+  computed: {
+    formalMessages() {
+      return this.club.messages.filter((message) => {
+        return message.category == "formal";
+      });
+    },
+    informalMessages() {
+      return this.club.messages.filter((message) => {
+        return message.category == "informal";
+      });
+    },
   },
   methods: {
     membershipCreate: function () {
@@ -256,16 +273,17 @@ export default {
                 </a>
               </div>
             </nav>
+            <!-- FORMAL TAB -->
             <div class="tab-content py-4" id="nav-tabContent">
               <div class="tab-pane fade show active" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
                 <ul class="list-unstyled my-4">
-                  <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
-                    <div v-if="message.category == 'formal'">
+                  <li class="list-inline d-flex py-3" v-for="message in formalMessages" v-bind:key="message.id">
+                    <div>
                       <router-link v-bind:to="`/users/${message.user['id']}`">
                         <img class="rounded-circle img-thumbnail" :src="`${message.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
-                    <div class="ps-4" v-if="message.category == 'formal'">
+                    <div class="ps-4">
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
                       <p class="text-muted">
                         {{ relativeDate(message.updated_at) }}
@@ -276,19 +294,22 @@ export default {
                           v-on:click="(messageEdit = message), (editContent = message.body)"
                         />
                       </p>
-
-                      <div v-if="messageEdit == message">
-                        <div id="editor"></div>
-                        {{ message.body }}
-                        <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
-                        <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
-                        <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
-                          Delete
-                        </button>
+                      <div v-show="messageEdit == message">
+                        <div id="editorFormal"></div>
+                        <div>{{ message.body }}</div>
+                        <div>
+                          <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
+                          <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
+                          <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
+                            Delete
+                          </button>
+                        </div>
                       </div>
-                      <p class="text-muted fs-16">
-                        <span v-html="message.body"></span>
-                      </p>
+                      <div>
+                        <p class="text-muted fs-16">
+                          <span v-html="message.body"></span>
+                        </p>
+                      </div>
                     </div>
                   </li>
                 </ul>
@@ -300,15 +321,16 @@ export default {
                   <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
                 </div>
               </div>
+              <!-- INFORMAL TAB -->
               <div class="tab-pane fade" id="nav-informal" role="tabpanel" aria-labelledby="nav-informal-tab">
                 <ul class="list-unstyled my-4">
-                  <li class="list-inline d-flex py-3" v-for="message in club.messages" v-bind:key="message.id">
-                    <div v-if="message.category == 'informal'">
+                  <li class="list-inline d-flex py-3" v-for="message in informalMessages" v-bind:key="message.id">
+                    <div>
                       <router-link v-bind:to="`/users/${message.user['id']}`">
                         <img class="rounded-circle img-thumbnail" :src="`${message.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
-                    <div class="ps-4" v-if="message.category == 'informal'">
+                    <div class="ps-4">
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
                       <p class="text-muted">
                         {{ relativeDate(message.updated_at) }}
@@ -319,23 +341,26 @@ export default {
                           v-on:click="(messageEdit = message), (editContent = message.body)"
                         />
                       </p>
-                      <div v-if="messageEdit == message">
-                        <div id="editor"></div>
-                        {{ message.body }}
-                        <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
-                        <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
-                        <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
-                          Delete
-                        </button>
+                      <div v-show="messageEdit == message">
+                        <div id="editorInormal"></div>
+                        <div>{{ message.body }}</div>
+                        <div>
+                          <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
+                          <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
+                          <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
+                            Delete
+                          </button>
+                        </div>
                       </div>
-                      <p class="text-muted fs-16">
-                        <span v-html="message.body"></span>
-                      </p>
+                      <div>
+                        <p class="text-muted fs-16">
+                          <span v-html="message.body"></span>
+                        </p>
+                      </div>
                     </div>
                   </li>
                 </ul>
                 <div v-show="club.is_active">
-                  <br />
                   <div id="informal"></div>
                   <br />
                   <button v-on:click="messageCreate(1)" class="btn btn-primary">Add Message</button>
