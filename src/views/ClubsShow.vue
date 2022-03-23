@@ -233,7 +233,7 @@ export default {
     </section>
     <!-- end pro-detail -->
 
-    <!-- detail tab -->
+    <!-- detail tab  -->
     <section class="section bg-light" v-show="club['is_member?']">
       <div class="container">
         <div class="row">
@@ -275,20 +275,18 @@ export default {
                 </a>
               </div>
             </nav>
-            <!-- FORMAL TAB -->
             <div class="tab-content py-4" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
+              <div class="tab-pane fade" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
                 <h6 class="lh-base fw-medium">Discussion Question Answers</h6>
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in formalMessages" v-bind:key="message.id">
                     <div>
                       <router-link v-bind:to="`/users/${message.user['id']}`">
-                        <img class="rounded-circle img-thumbnail" :src="`${message.user['image']}`" alt="user-image" />
+                        <img class="rounded-circle img-member" :src="`${message.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
                     <div class="ps-4">
                       <h6 class="d-inline-block fs-16 mb-0">{{ message.user["name"] }}</h6>
-                      <div class="rating d-inline-block ps-sm-4"></div>
                       <p class="text-muted">
                         {{ relativeDate(message.updated_at) }}
                         <font-awesome-icon
@@ -298,9 +296,7 @@ export default {
                           v-on:click="(messageEdit = message), (editContent = message.body)"
                         />
                       </p>
-                      <p class="text-muted fs-16">
-                        <span v-html="message.body"></span>
-                      </p>
+                      <p class="text-muted fs-16" v-html="message.body"></p>
                       <div v-show="messageEdit == message">
                         <div id="editorFormal"></div>
                         <div>{{ message.body }}</div>
@@ -315,22 +311,14 @@ export default {
                     </div>
                   </li>
                 </ul>
-                <div v-show="club.is_active">
-                  <div id="formal"></div>
-                  <br />
-                  <button v-on:click="messageCreate(0)" class="btn btn-primary">Add Message</button>
-                  <br />
-                  <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
-                </div>
               </div>
-              <!-- INFORMAL TAB -->
               <div class="tab-pane fade" id="nav-informal" role="tabpanel" aria-labelledby="nav-informal-tab">
-                <h6 class="lh-base fw-medium">Random Thoughts</h6>
+                <h6 class="lh-base fw-medium">Random Discussions</h6>
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in informalMessages" v-bind:key="message.id">
                     <div>
                       <router-link v-bind:to="`/users/${message.user['id']}`">
-                        <img class="rounded-circle img-thumbnail" :src="`${message.user['image']}`" alt="user-image" />
+                        <img class="rounded-circle img-member" :src="`${message.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
                     <div class="ps-4">
@@ -344,8 +332,9 @@ export default {
                           v-on:click="(messageEdit = message), (editContent = message.body)"
                         />
                       </p>
+                      <p class="text-muted fs-16" v-html="message.body"></p>
                       <div v-show="messageEdit == message">
-                        <div id="editorInormal"></div>
+                        <div id="editorFormal"></div>
                         <div>{{ message.body }}</div>
                         <div>
                           <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
@@ -355,21 +344,9 @@ export default {
                           </button>
                         </div>
                       </div>
-                      <div>
-                        <p class="text-muted fs-16">
-                          <span v-html="message.body"></span>
-                        </p>
-                      </div>
                     </div>
                   </li>
                 </ul>
-                <div v-show="club.is_active">
-                  <div id="informal"></div>
-                  <br />
-                  <button v-on:click="messageCreate(1)" class="btn btn-primary">Add Message</button>
-                  <br />
-                  <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
-                </div>
               </div>
               <div class="tab-pane fade" id="nav-members" role="tabpanel" aria-labelledby="nav-members-tab">
                 <h6 class="lh-base fw-medium">Members</h6>
@@ -377,11 +354,7 @@ export default {
                   <li class="list-inline d-flex py-3" v-for="membership in club.memberships" v-bind:key="membership.id">
                     <div>
                       <router-link v-bind:to="`/users/${membership.user['id']}`">
-                        <img
-                          class="rounded-circle img-thumbnail"
-                          :src="`${membership.user['image']}`"
-                          alt="user-image"
-                        />
+                        <img class="rounded-circle img-member" :src="`${membership.user['image']}`" alt="user-image" />
                       </router-link>
                     </div>
                     <div class="ps-4">
@@ -393,17 +366,19 @@ export default {
             </div>
           </div>
         </div>
+        <!-- end nav and row -->
       </div>
     </section>
+    <!-- end detail tab -->
   </div>
 </template>
 
 <style scoped>
-img.rounded-circle.img-thumbnail {
+img.img-member {
   width: 100px;
-}
-
-fa-circle-check {
-  color: #1fdfa5;
+  padding: 0.25rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
 }
 </style>
