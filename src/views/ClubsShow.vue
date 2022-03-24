@@ -9,6 +9,7 @@ dayjs.extend(relativeTime);
 export default {
   data: function () {
     return {
+      spinner: true,
       profile: localStorage.getItem("profile"),
       club: {
         book: {
@@ -48,6 +49,7 @@ export default {
     axios.get(`/clubs/${this.$route.params.id}`).then((response) => {
       console.log("Created", response.data);
       this.club = response.data;
+      this.spinner = false;
     });
   },
   mounted: function () {
@@ -161,7 +163,12 @@ export default {
     <!-- start title -->
     <section class="section bg-light title-section">
       <div class="container">
-        <div class="row align-items-center justify-content-center text-center">
+        <div class="row align-items-center justify-content-center text-center" v-if="spinner">
+          <div class="col-lg-8 mt-5 pt-3">
+            <h2 class="fw-bold">Loading Club...</h2>
+          </div>
+        </div>
+        <div class="row align-items-center justify-content-center text-center" v-else>
           <div class="col-lg-8 mt-5 pt-3">
             <h2 class="fw-bold">
               {{ club.name }}
@@ -182,7 +189,12 @@ export default {
     <!-- end title -->
 
     <section class="sm-section">
-      <div class="container">
+      <div class="d-flex justify-content-center text-muted" v-if="spinner">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading Club...</span>
+        </div>
+      </div>
+      <div class="container" v-else>
         <div class="row">
           <div class="col-lg-12">
             <div class="row">
@@ -234,6 +246,7 @@ export default {
     <!-- end pro-detail -->
 
     <!-- detail tab  -->
+
     <section class="section bg-light" v-show="club['is_member?']">
       <div class="container">
         <div class="row">
@@ -276,8 +289,7 @@ export default {
               </div>
             </nav>
             <div class="tab-content py-4" id="nav-tabContent">
-              <div class="tab-pane fade" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
-                <h6 class="lh-base fw-medium">Discussion Question Answers</h6>
+              <div class="tab-pane fade show active" id="nav-formal" role="tabpanel" aria-labelledby="nav-formal-tab">
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in formalMessages" v-bind:key="message.id">
                     <div>
@@ -311,9 +323,15 @@ export default {
                     </div>
                   </li>
                 </ul>
+                <div v-show="club.is_active">
+                  <div id="formal"></div>
+                  <br />
+                  <button v-on:click="messageCreate(0)" class="btn btn-primary">Add Message</button>
+                  <br />
+                  <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
+                </div>
               </div>
               <div class="tab-pane fade" id="nav-informal" role="tabpanel" aria-labelledby="nav-informal-tab">
-                <h6 class="lh-base fw-medium">Random Discussions</h6>
                 <ul class="list-unstyled my-4">
                   <li class="list-inline d-flex py-3" v-for="message in informalMessages" v-bind:key="message.id">
                     <div>
@@ -347,6 +365,14 @@ export default {
                     </div>
                   </li>
                 </ul>
+                <div v-show="club.is_active">
+                  <br />
+                  <div id="informal"></div>
+                  <br />
+                  <button v-on:click="messageCreate(1)" class="btn btn-primary">Add Message</button>
+                  <br />
+                  <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
+                </div>
               </div>
               <div class="tab-pane fade" id="nav-members" role="tabpanel" aria-labelledby="nav-members-tab">
                 <h6 class="lh-base fw-medium">Members</h6>
@@ -366,12 +392,12 @@ export default {
             </div>
           </div>
         </div>
-        <!-- end nav and row -->
       </div>
     </section>
-    <!-- end detail tab -->
   </div>
 </template>
+
+<!-- end detail tab -->
 
 <style scoped>
 img.img-member {

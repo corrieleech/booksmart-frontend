@@ -2410,4 +2410,4 @@ module.exports = __webpack_require__(/*! /home/travis/build/feathericons/feather
 
 /******/ });
 });
-//# sourceMappingURL=feather.js.map
+// # sourceMappingURL=feather.js.map
