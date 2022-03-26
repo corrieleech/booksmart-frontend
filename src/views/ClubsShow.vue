@@ -3,6 +3,7 @@
 
 import axios from "axios";
 import dayjs from "dayjs";
+
 var relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
 
@@ -17,15 +18,14 @@ export default {
         },
         messages: [],
       },
-      formalCreateQuill: {},
-      informalCreateQuill: {},
-      editorFormal: {},
-      editorInformal: {},
+      formalQuill: {},
+      informalQuill: {},
+      editOn: false,
+      editedMessageId: "",
       contents: "",
       messageBody: "",
       categoryType: "",
       messageEdit: "",
-      editContent: "",
       errors: [],
       options: {
         debug: "info",
@@ -53,9 +53,8 @@ export default {
     });
   },
   mounted: function () {
-    this.formalCreateQuill = new Quill("#formal", this.options);
-    this.informalCreateQuill = new Quill("#informal", this.options);
-    this.editorFormal = new Quill("#editorFormal", this.options);
+    this.formalQuill = new Quill("#formal", this.options);
+    this.informalQuill = new Quill("#informal", this.options);
   },
   computed: {
     formalMessages() {
@@ -76,8 +75,6 @@ export default {
         console.log("Membership create:", response.data);
         this.club.memberships.push(response.data);
         this.club["is_member?"] = true;
-        this.formalCreateQuill = new Quill("#formal", this.options);
-        this.informalCreateQuill = new Quill("#informal", this.options);
       });
     },
     membershipDestroy: function () {
@@ -93,14 +90,14 @@ export default {
       return dayjs().to(dayjs(date));
     },
     messageCreate: function (number) {
-      var quill = this.formalCreateQuill;
+      var quill = this.formalQuill;
       if (number == 1) {
         this.categoryType = "informal";
-        this.contents = this.informalCreateQuill.root.innerHTML;
-        quill = this.informalCreateQuill;
+        this.contents = this.informalQuill.root.innerHTML;
+        quill = this.informalQuill;
       } else {
         this.categoryType = "formal";
-        this.contents = this.formalCreateQuill.root.innerHTML;
+        this.contents = this.formalQuill.root.innerHTML;
       }
       const params = {
         club_id: this.club.id,
@@ -121,31 +118,42 @@ export default {
         });
     },
     openEditor: function (message) {
-      console.log(message);
+      console.log("Opened editor", message);
+      this.formalQuill.root.innerHTML = message.body;
+      this.editOn = true;
+      this.editedMessageId = message.id;
     },
-    messageUpdate: function (message) {
+    messageUpdate: function () {
+      const message = this.club.messages.find((message) => message.id == this.editedMessageId);
       const index = this.club.messages.indexOf(message);
-      const params = { body: this.editContent };
+      const params = { body: this.formalQuill.root.innerHTML };
       axios
-        .patch(`/messages/${message.id}`, params)
+        .patch(`/messages/${this.editedMessageId}`, params)
         .then((response) => {
           console.log("Updated message", response.data);
-          this.club.messages[index].body = this.editContent;
+          this.club.messages[index].body = this.formalQuill.root.innerHTML;
           this.messageEdit = "";
           this.errors = [];
+          this.editOn = false;
+          this.formalQuill.setContents([{ insert: "\n" }]);
+          this.informalQuill.setContents([{ insert: "\n" }]);
         })
         .catch((error) => {
           console.log(error.response.data.errors);
           this.errors = error.response.data.errors;
         });
     },
-    messageDelete: function (message) {
+    messageDelete: function () {
+      const message = this.club.messages.find((message) => message.id == this.editedMessageId);
       const index = this.club.messages.indexOf(message);
-      axios.delete(`/messages/${message.id}`, message).then((response) => {
+      axios.delete(`/messages/${this.editedMessageId}`).then((response) => {
         console.log("Message has been removed.", response.data);
         this.messageEdit = "";
       });
       this.club.messages.splice(index, 1);
+      this.editOn = false;
+      this.formalQuill.setContents([{ insert: "\n" }]);
+      this.informalQuill.setContents([{ insert: "\n" }]);
     },
     clubUpdate: function () {
       this.club.is_active = !this.club.is_active;
@@ -305,29 +313,30 @@ export default {
                           icon="pen-to-square"
                           size="lg"
                           v-if="profile == message.user['id'] && club.is_active"
-                          v-on:click="(messageEdit = message), (editContent = message.body)"
+                          v-on:click="(messageEdit = message), openEditor(message)"
                         />
                       </p>
                       <p class="text-muted fs-16" v-html="message.body"></p>
-                      <div v-show="messageEdit == message">
-                        <div id="editorFormal"></div>
-                        <div>{{ message.body }}</div>
-                        <div>
-                          <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
-                          <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
-                          <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
-                            Delete
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </li>
                 </ul>
                 <div v-show="club.is_active">
+                  <div>
+                    <h5 v-if="editOn" class="text-muted">Edit Comment</h5>
+                  </div>
                   <div id="formal"></div>
                   <br />
-                  <button v-on:click="messageCreate(0)" class="btn btn-primary">Add Message</button>
-                  <br />
+                  <div v-if="editOn">
+                    <button class="btn btn-primary btn-sm" v-on:click="messageUpdate()">Save</button>
+                    <button
+                      class="btn btn-secondary btn-sm"
+                      v-on:click="(editOn = false), this.formalQuill.setContents([{ insert: '\n' }])"
+                    >
+                      Cancel
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete()">Delete</button>
+                  </div>
+                  <div v-else><button v-on:click="messageCreate(0)" class="btn btn-primary">Add Message</button></div>
                   <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
                 </div>
               </div>
