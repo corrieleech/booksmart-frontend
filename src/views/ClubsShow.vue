@@ -120,23 +120,27 @@ export default {
     openEditor: function (message) {
       console.log("Opened editor", message);
       this.formalQuill.root.innerHTML = message.body;
+      this.informalQuill.root.innerHTML = message.body;
       this.editOn = true;
       this.editedMessageId = message.id;
     },
-    messageUpdate: function () {
+    messageUpdate: function (number) {
+      var quill = this.formalQuill;
+      if (number == 1) {
+        quill = this.informalQuill;
+      }
       const message = this.club.messages.find((message) => message.id == this.editedMessageId);
       const index = this.club.messages.indexOf(message);
-      const params = { body: this.formalQuill.root.innerHTML };
+      const params = { body: quill.root.innerHTML };
       axios
         .patch(`/messages/${this.editedMessageId}`, params)
         .then((response) => {
           console.log("Updated message", response.data);
-          this.club.messages[index].body = this.formalQuill.root.innerHTML;
+          this.club.messages[index].body = quill.root.innerHTML;
           this.messageEdit = "";
           this.errors = [];
           this.editOn = false;
-          this.formalQuill.setContents([{ insert: "\n" }]);
-          this.informalQuill.setContents([{ insert: "\n" }]);
+          quill.setContents([{ insert: "\n" }]);
         })
         .catch((error) => {
           console.log(error.response.data.errors);
@@ -327,7 +331,7 @@ export default {
                   <div id="formal"></div>
                   <br />
                   <div v-if="editOn">
-                    <button class="btn btn-primary btn-sm" v-on:click="messageUpdate()">Save</button>
+                    <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(0)">Save</button>
                     <button
                       class="btn btn-secondary btn-sm"
                       v-on:click="(editOn = false), this.formalQuill.setContents([{ insert: '\n' }])"
@@ -356,30 +360,30 @@ export default {
                           icon="pen-to-square"
                           size="lg"
                           v-if="profile == message.user['id'] && club.is_active"
-                          v-on:click="(messageEdit = message), (editContent = message.body)"
+                          v-on:click="(messageEdit = message), openEditor(message)"
                         />
                       </p>
                       <p class="text-muted fs-16" v-html="message.body"></p>
-                      <div v-show="messageEdit == message">
-                        <div id="editorFormal"></div>
-                        <div>{{ message.body }}</div>
-                        <div>
-                          <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(message)">Save</button>
-                          <button class="btn btn-secondary btn-sm" v-on:click="messageEdit = ''">Cancel</button>
-                          <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete(message)">
-                            Delete
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </li>
                 </ul>
                 <div v-show="club.is_active">
-                  <br />
+                  <div>
+                    <h5 v-if="editOn" class="text-muted">Edit Comment</h5>
+                  </div>
                   <div id="informal"></div>
                   <br />
-                  <button v-on:click="messageCreate(1)" class="btn btn-primary">Add Message</button>
-                  <br />
+                  <div v-if="editOn">
+                    <button class="btn btn-primary btn-sm" v-on:click="messageUpdate(1)">Save</button>
+                    <button
+                      class="btn btn-secondary btn-sm"
+                      v-on:click="(editOn = false), this.informalQuill.setContents([{ insert: '\n' }])"
+                    >
+                      Cancel
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" v-on:click="messageDelete()">Delete</button>
+                  </div>
+                  <div v-else><button v-on:click="messageCreate(1)" class="btn btn-primary">Add Message</button></div>
                   <small v-for="error in errors" v-bind:key="error">{{ error }}</small>
                 </div>
               </div>
