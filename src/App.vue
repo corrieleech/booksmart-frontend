@@ -24,7 +24,6 @@ export default {
           <img src="/images/logo-light.png" class="logo-light" alt="" height="40" />
           <img src="/images/booksmartlogolg1.png" class="logo-dark" alt="" height="40" />
         </router-link>
-
         <div class="navbar-header">
           <button
             class="navbar-toggler"
@@ -37,7 +36,6 @@ export default {
             <span class="mdi mdi-menu"></span>
           </button>
         </div>
-
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="nav-item">
@@ -68,7 +66,6 @@ export default {
       </div>
     </nav>
     <!-- END NAVBAR -->
-
     <router-view :key="$route.fullPath" />
     <!-- START FOOTER ALTER -->
     <div class="footer-alter bg-light py-3">
