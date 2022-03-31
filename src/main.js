@@ -10,7 +10,7 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 axios.defaults.baseURL =
-  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://booksmart-bookclubs.netlify.app/";
+  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://booksmart-bookclubs.netlify.app";
 
 var jwt = localStorage.getItem("jwt");
 if (jwt) {
