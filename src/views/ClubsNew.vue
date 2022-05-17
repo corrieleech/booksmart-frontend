@@ -95,8 +95,8 @@ export default {
                   <div v-if="possibleBooks.length && hasSearched" class="price my-3">
                     <h4 class="lh-base mt-3">Step 3: Confirm Book</h4>
                     <div v-for="book in possibleBooks" v-bind:key="book.isbn">
-                      <h5 class="muted-text">{{ book.title }}</h5>
-                      <h5 class="muted-text">by {{ book.author }}</h5>
+                      <h5 class="muted-text">{{ book.name }}</h5>
+                      <!-- <h5 class="muted-text">by {{ book.author }}</h5> -->
                       <button class="btn btn-primary me-2 my-2" v-on:click="createClub(book)">Create Book Club</button>
                     </div>
                   </div>
@@ -122,7 +122,7 @@ export default {
                     alt="no book found"
                   />
                   <div v-for="book in possibleBooks" v-bind:key="book.isbn">
-                    <img :src="book._links[1]['href']" alt="book cover" class="/img-fluid rounded-3" />
+                    <img :src="book.coverUrl" alt="book cover" class="/img-fluid rounded-3" />
                   </div>
                 </div>
               </div>

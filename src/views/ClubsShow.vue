@@ -246,7 +246,25 @@ export default {
                     <ins class="pe-2 fs-18 text-success fw-semibold text-decoration-none">Discussion Questions</ins>
                   </div>
                   <p class="text-muted fs-16 my-3">
-                    <span v-if="club.details" v-html="`${club.details['disc_questions']}`"></span>
+                    <span v-if="club.details['disc_questions']" v-html="`${club.details['disc_questions']}`"></span>
+                    <span v-else>
+                      <p>1. What did you like best about this book? The least?</p>
+                      <p>2. Share a favorite quote from the book. Why did this quote stand out?</p>
+                      <p>3. Would you read another book by this author? Why or why not?</p>
+                      <p>4. What feelings did this book evoke for you?</p>
+                      <p>
+                        5. What do you think of the book’s title? How does it relate to the book’s contents? What other
+                        title might you choose?
+                      </p>
+                      <p>
+                        6. If you could hear this same story from another person’s point of view, who would you choose?
+                      </p>
+                      <p>7. Which character in the book would you most like to meet?</p>
+                      <p>
+                        8. What did you think of the book’s length? If it’s too long, what would you cut? If too short,
+                        what would you add?
+                      </p>
+                    </span>
                   </p>
                 </div>
               </div>
