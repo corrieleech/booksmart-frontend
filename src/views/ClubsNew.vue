@@ -92,12 +92,31 @@ export default {
                       Search for Title
                     </button>
                   </div>
-                  <div v-if="possibleBooks.length && hasSearched" class="price my-3">
+                  <div v-if="possibleBooks.length && hasSearched" id="grid" class="row">
                     <h4 class="lh-base mt-3">Step 3: Confirm Book</h4>
-                    <div v-for="book in possibleBooks" v-bind:key="book.isbn">
-                      <h5 class="muted-text">{{ book.name }}</h5>
-                      <!-- <h5 class="muted-text">by {{ book.author }}</h5> -->
-                      <button class="btn btn-primary me-2 my-2" v-on:click="createClub(book)">Create Book Club</button>
+                    <div
+                      v-for="book in possibleBooks"
+                      v-bind:key="book.isbn"
+                      class="col-lg-4 col-md-6 col-12 spacing picture-item"
+                    >
+                      <div
+                        class="card border-0 work-container work-grid position-relative d-block overflow-hidden rounded"
+                      >
+                        <div class="card-body p-0">
+                          <img :src="book.coverUrl" class="img-fluid rounded" alt="work-image" />
+                          <div class="content bg-light p-3 shadow">
+                            <h6>
+                              <a class="text-dark title fw-medium text-uppercase fs-15">
+                                {{ book.name }}
+                              </a>
+                            </h6>
+                            <p class="fs-15 text-muted font-weight-normal tag mb-0">
+                              by {{ book.authors[0]["authorDisplay"] }}
+                            </p>
+                            <button class="btn btn-primary me-2 my-2" v-on:click="createClub(book)">Select Book</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div v-if="!possibleBooks.length && hasSearched">
@@ -121,9 +140,6 @@ export default {
                     src="/images/nobookfound.png"
                     alt="no book found"
                   />
-                  <div v-for="book in possibleBooks" v-bind:key="book.isbn">
-                    <img :src="book.coverUrl" alt="book cover" class="/img-fluid rounded-3" />
-                  </div>
                 </div>
               </div>
             </div>
