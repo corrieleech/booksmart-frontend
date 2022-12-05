@@ -10,7 +10,7 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 axios.defaults.baseURL =
-  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://https://booksmart-api.onrender.com/";
+  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://booksmart-api.onrender.com/";
 
 var jwt = localStorage.getItem("jwt");
 if (jwt) {
