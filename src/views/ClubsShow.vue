@@ -58,14 +58,18 @@ export default {
   },
   computed: {
     formalMessages() {
-      return this.club.messages.filter((message) => {
-        return message.category == "formal";
-      });
+      if (this.club.messages) {
+        return this.club.messages.filter((message) => {
+          return message.category == "formal";
+        });
+      } else return {};
     },
     informalMessages() {
-      return this.club.messages.filter((message) => {
-        return message.category == "informal";
-      });
+      if (this.club.messages) {
+        return this.club.messages.filter((message) => {
+          return message.category == "informal";
+        });
+      } else return {};
     },
   },
   methods: {
